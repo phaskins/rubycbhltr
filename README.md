@@ -16,6 +16,7 @@ This extension is designed to help identify the beginning line of a block in rub
 The highlight color can be changed via the configuration settings:
 
 * highlightColor.color: specifies the color code for the highlight color. The default color is #BABABA. If an invalid color code is given, it will default to #BABABA.
+
 ![](./images/commands.png)
 
 ## Command/Keybinding
