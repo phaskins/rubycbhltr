@@ -154,7 +154,7 @@ export function activate(context: vscode.ExtensionContext) {
                     let tokenString = (lineText.substring(token.startIndex, token.endIndex));
                     // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
                     matchedKeyword = tokenString;
-                    console.log(tokenString)
+                    // console.log(tokenString)
                     
                     for (let i = 0; i < token.scopes.length; i++) {
                       if ((regExp1.test(tokenString) || regExp2.test(tokenString)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {

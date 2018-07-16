@@ -18,24 +18,24 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.showStartBlock",
+                "command": "extension.showStartOfBlock",
                 "title": "Show Start Of Block"
             }
         ],
         "keybindings": [
-          {
-            "command": "extension.showStartOfBlock",
-            "key": "shift+f",
-            "when": "editorTextFocus && editorLangId == ruby"
-          }
+            {
+                "command": "extension.showStartOfBlock",
+                "key": "shift+f",
+                "when": "editorTextFocus && editorLangId == ruby"
+            }
         ],
         "configuration": {
-          "properties": {
-            "highlightColor.color": {
-              "type": "string",
-              "default": "#BABABA"
+            "properties": {
+                "highlightColor.color": {
+                    "type": "string",
+                    "default": "#BABABA"
+                }
             }
-          }
         }
     },
     "scripts": {
@@ -49,16 +49,15 @@
         "@types/mocha": "^2.2.42",
         "@types/node": "^7.0.43",
         "electron-rebuild": "^1.8.1",
-        "tslint": "^5.8.0",
+        "tslint": "^5.11.0",
         "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "vscode-textmate": "^4.0.1"
+        "vscode": "^1.1.6"
     },
     "dependencies": {
         "vscode-textmate": "^4.0.1"
     },
     "repository": {
-      "type": "git",
-      "url": "https://github.com/phaskins/rubycbhltr.git"
+        "type": "git",
+        "url": "https://github.com/phaskins/rubycbhltr.git"
     }
 }
