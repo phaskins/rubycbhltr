@@ -1,0 +1,64 @@
+{
+    "name": "rubycbhltr",
+    "displayName": "Ruby Code Block Highlighter",
+    "description": "Initializing on the keyword \"end\" will highlight the corresponding start of the block",
+    "icon": "images/icon.png",
+    "version": "0.0.1",
+    "publisher": "phaskins",
+    "engines": {
+        "vscode": "^1.25.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.showStartOfBlock"
+    ],
+    "main": "./out/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.showStartBlock",
+                "title": "Show Start Of Block"
+            }
+        ],
+        "keybindings": [
+          {
+            "command": "extension.showStartOfBlock",
+            "key": "shift+f",
+            "when": "editorTextFocus && editorLangId == ruby"
+          }
+        ],
+        "configuration": {
+          "properties": {
+            "highlightColor.color": {
+              "type": "string",
+              "default": "#BABABA"
+            }
+          }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "npm run compile && node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43",
+        "electron-rebuild": "^1.8.1",
+        "tslint": "^5.8.0",
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "vscode-textmate": "^4.0.1"
+    },
+    "dependencies": {
+        "vscode-textmate": "^4.0.1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/phaskins/rubycbhltr.git"
+    }
+}
