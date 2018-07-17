@@ -1,5 +1,4 @@
 //'use strict';
-// The module 'vscode' contains the VS Code extensibility API
 import * as vscode from 'vscode';
 import * as vsctm from 'vscode-textmate';
 import * as fs from 'fs';
@@ -32,8 +31,6 @@ let registry = new vsctm.Registry({
   }
 });
 
-// This method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   let decorationType: vscode.TextEditorDecorationType;
 
@@ -65,10 +62,6 @@ export function activate(context: vscode.ExtensionContext) {
             const regExp = new RegExp(/\bend\b/)
             const regExp1 = new RegExp(/\b(if|unless|while|until)\b/)
             const regExp2 = new RegExp(/\b(begin|case|class|def|do|for|module)\b/);
-            // Since Javascript does not support negative lookbehinds, check for one line conditional/loop statements
-            // and ignore these lines. Check for this by reversing the regex and checking against reverseLineText
-            // A very long a complicated regex that basically says, if there is stuff behind an if/unless/while/until
-            // it MUST be in a comment or string
             const regExp3 = new RegExp(/^\s*(if|unless|while|until)/);
 
             // The line number returned is off by 1 (line numbers start at 0 instead of at 1, like in the editor)
@@ -211,8 +204,14 @@ export function activate(context: vscode.ExtensionContext) {
                   backgroundColor: color
                 });
                 let highlightRange = new vscode.Range(lineNumber, 0, lineNumber, lineText.length);
-
                 editor.setDecorations(decorationType, [highlightRange]);
+
+                let blockStartPosition = new vscode.Position(lineNumber, 0);
+                let currentVisibleRange = editor.visibleRanges[0]
+                // If the line isn't already visible, scroll to where the block's start line is at the top
+                if (!currentVisibleRange.contains(blockStartPosition)) {
+                  editor.revealRange(new vscode.Range(blockStartPosition, blockStartPosition), vscode.TextEditorRevealType.AtTop)
+                }
                 break;
               }
             }
