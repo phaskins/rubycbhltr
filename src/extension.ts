@@ -17,8 +17,8 @@ let registry = new vsctm.Registry({
       return new Promise((resolve, reject) => {
         fs.readFile(path.resolve(__dirname, languageSyntaxPath), (error, content) => {
           if (error) {
-            console.log(error)
-            console.log(__dirname)
+            console.log(error);
+            console.log(__dirname);
             reject(error);
           } else {
             let rawGrammar = vsctm.parseRawGrammar(content.toString(), languageSyntaxPath);
@@ -59,8 +59,8 @@ export function activate(context: vscode.ExtensionContext) {
             let firstEnd = 0;
             let matchedKeyword: string;
             let lineText: string;
-            const regExp = new RegExp(/\bend\b/)
-            const regExp1 = new RegExp(/\b(if|unless|while|until)\b/)
+            const regExp = new RegExp(/\bend\b/);
+            const regExp1 = new RegExp(/\b(if|unless|while|until)\b/);
             const regExp2 = new RegExp(/\b(begin|case|class|def|do|for|module)\b/);
             const regExp3 = new RegExp(/^\s*(if|unless|while|until)/);
 
@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
                   let isAKeyword = -1;
                   let token = lineTokens.tokens[i];
                   let tokenString = (lineText.substring(token.startIndex, token.endIndex));
-                  // console.log(tokenString)
+                  // console.log(tokenString);
 
                   // If a token matches the word 'end', check to make sure it's not in a comment or string
                   // If a comment or string scope is found, set inCommentOrString to 1 and
@@ -135,7 +135,7 @@ export function activate(context: vscode.ExtensionContext) {
                 
               } else if (regExp1.test(lineText )|| regExp2.test(lineText)) {
                   if (!grammar) {
-                    console.error('Grammar is null!')
+                    console.error('Grammar is null!');
                   }
 
                   let lineTokens = grammar.tokenizeLine(lineText, null);
@@ -194,28 +194,28 @@ export function activate(context: vscode.ExtensionContext) {
 
               if (count == 0) {
                 // Get the color from the user settings. If the color code is invalid, default to #BABABA
-                let color: String = vscode.workspace.getConfiguration('highlightColor').get('color')
+                let color: String = vscode.workspace.getConfiguration('highlightColor').get('color');
                 
                 if (!color.match(/#[0-9A-F]{6}/)) {
-                  color = "#BABABA"
+                  color = "#BABABA";
                 }
 
                 decorationType = vscode.window.createTextEditorDecorationType({
                   backgroundColor: color
                 });
-                let highlightRange = new vscode.Range(lineNumber, 0, lineNumber, lineText.length);
+                let firstCharIndex = /(\S)/.exec(lineText).index;
+                let highlightRange = new vscode.Range(lineNumber, firstCharIndex, lineNumber, lineText.length);
                 editor.setDecorations(decorationType, [highlightRange]);
 
                 let blockStartPosition = new vscode.Position(lineNumber, 0);
-                let currentVisibleRange = editor.visibleRanges[0]
+                let currentVisibleRange = editor.visibleRanges[0];
                 // If the line isn't already visible, scroll to where the block's start line is at the top
                 if (!currentVisibleRange.contains(blockStartPosition)) {
-                  editor.revealRange(new vscode.Range(blockStartPosition, blockStartPosition), vscode.TextEditorRevealType.AtTop)
+                  editor.revealRange(new vscode.Range(blockStartPosition, blockStartPosition), vscode.TextEditorRevealType.AtTop);
                 }
                 break;
               }
             }
-          
 
           } else {
             vscode.window.showInformationMessage('Please place the cursor on the word "end"');
