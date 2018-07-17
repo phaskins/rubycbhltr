@@ -194,9 +194,9 @@ export function activate(context: vscode.ExtensionContext) {
 
               if (count == 0) {
                 // Get the color from the user settings. If the color code is invalid, default to #BABABA
-                let color: String = vscode.workspace.getConfiguration('highlightColor').get('color');
-                
-                if (!color.match(/#[0-9A-F]{6}/)) {
+                let color = vscode.workspace.getConfiguration('highlightColor').get('color');
+
+                if (typeof color !== 'string' || !color.match(/#[0-9A-F]{6}/)) {
                   color = "#BABABA";
                 }
 
