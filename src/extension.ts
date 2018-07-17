@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('extension.showStartOfBlock', () => {
     // If the line is already highlighted, do nothing
     if (decorationType) {
-      // vscode.window.showInformationMessage('Line already highlighted');
+      // vscode.window.showInformationMessage('Line is already highlighted');
       return;
     }
 
