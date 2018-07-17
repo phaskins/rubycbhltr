@@ -8,6 +8,7 @@ This extension is designed to help identify the beginning line of a block that m
 
 ![](./images/example_selection.png)
 * Next, trigger the command by choosing "Show Start Of Block" from the Command Palette, or by pressing Shift + F.
+
 ![](./images/icon.png)
 * The matching start line of the block will be highlighted.
 * To remove the highlight, click elsewhere on the file.
