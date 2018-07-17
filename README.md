@@ -6,6 +6,7 @@ This extension is designed to help identify the beginning line of a block that m
 
 * First, either select the word "end" (drag over the word with the mouse) or place the cursor on top of it. The cursor can be placed anywhere within, behind, or after the word "end" to work.
 * Next, trigger the command by choosing "Show Start Of Block" from the Command Palette, or by pressing Shift + F.
+![](./images/example_selection.png)
 * The matching start line of the block will be highlighted.
 * To remove the highlight, click elsewhere on the file.
 
