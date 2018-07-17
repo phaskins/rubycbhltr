@@ -35,6 +35,12 @@ export function activate(context: vscode.ExtensionContext) {
   let decorationType: vscode.TextEditorDecorationType;
 
   let disposable = vscode.commands.registerCommand('extension.showStartOfBlock', () => {
+    // If the line is already highlighted, do nothing
+    if (decorationType) {
+      // vscode.window.showInformationMessage('Line already highlighted');
+      return;
+    }
+
     const editor = vscode.window.activeTextEditor;
 
     if (editor) {
@@ -193,7 +199,8 @@ export function activate(context: vscode.ExtensionContext) {
               }
 
               if (count == 0) {
-                // Get the color from the user settings. If the color code is invalid, default to #BABABA
+                // Get the color from the user settings. If the color code is invalid or the provided value is not a string,
+                // default to #BABABA
                 let color = vscode.workspace.getConfiguration('highlightColor').get('color');
 
                 if (typeof color !== 'string' || !color.match(/#[0-9A-F]{6}/)) {
@@ -218,7 +225,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
 
           } else {
-            vscode.window.showInformationMessage('Please place the cursor on the word "end"');
+            vscode.window.showInformationMessage('Please place the cursor on or select only the word "end"');
           }
 
         }); 
@@ -238,6 +245,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       if (editor) {
         decorationType.dispose();
+        decorationType = null;
       }
     } 
   })
