@@ -1,12 +1,12 @@
 # Ruby Code Block Highlighter
 
-This extension is designed to help identify the beginning line of a block that matches with a particular "end" keyword in Ruby.
+This extension is designed to help identify the starting line of a block that matches with a particular "end" keyword in Ruby.
 
 ## Usage
 
 * First, either select the word "end" (drag over the word with the mouse) or place the cursor on top of it. The cursor can be placed anywhere within, behind, or after the word "end" to work.  
 ![](./images/example_selection.png)
-* Next, trigger the command by choosing "Show Start Of Block" from the Command Palette, or by pressing Shift + F.
+* Next, trigger the command by pressing Shift + F or by choosing "Show Start Of Block" from the Command Palette.
 ![](./images/example_highlighting.png)  
 ![](./images/example_command_selection.png)
 * The matching start line of the block will be highlighted.

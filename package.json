@@ -1,7 +1,7 @@
 {
     "name": "rubycbhltr",
     "displayName": "Ruby Code Block Highlighter",
-    "description": "Initializing on the keyword \"end\" will highlight the corresponding start of the block",
+    "description": "Triggering the command on the keyword \"end\" will highlight the corresponding start of the block",
     "icon": "images/icon.png",
     "version": "0.0.1",
     "publisher": "phaskins",
