@@ -25,8 +25,7 @@
         "keybindings": [
             {
                 "command": "extension.showStartOfBlock",
-                "key": "ctrl+shift+z",
-                "mac": "cmd+shift+z",
+                "key": "alt+h",
                 "when": "editorTextFocus && editorLangId == ruby"
             }
         ],
