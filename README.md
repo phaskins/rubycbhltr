@@ -18,11 +18,14 @@ This extension is designed to help identify the starting line of a block that ma
 
 ## Extension Settings
 
-The highlight color can be changed via the configuration settings:
+The highlight color can be changed via the "configuration" settings:
 
 * highlightColor.color: Specifies the color code for the highlighting. The default is #BABABA. If an invalid code is provided, the color will default to #BABABA.
-
+  
 ![](./images/configurations.png)
 
 ## Commands/Keybindings
-![](./images/commands.png)
+
+The keybinding for the extension can be changed via the "keybindings" settings  
+  
+![](./images/commands_keybindings.png)
