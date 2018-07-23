@@ -22,6 +22,14 @@
                 "title": "Show Start Of Block"
             }
         ],
+        "menus": {
+          "commandPalette": [
+            {
+              "command": "extension.showStartOfBlock",
+              "when": "editorLangId == ruby"
+            }
+          ]
+        },
         "keybindings": [
             {
                 "command": "extension.showStartOfBlock",
