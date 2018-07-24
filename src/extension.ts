@@ -58,11 +58,21 @@ export function activate(context: vscode.ExtensionContext) {
       if (range) {
         registry.loadGrammar('source.ruby').then(grammar => {
           let word = editor.document.getText(range);
+          let firstEnd;
 
-          // Check if the cursor is placed on the word "end", or if the word "end" is selected
-          if (word == 'end') {
+          // If the function is activated on a line that doesn't contain "end", then don't worry about not 
+          // decrementing the counter once the first keyword "end" is found. The reason for this is that the counter
+          // is initialized to -1. So if the line contains "end", we don't want to decrement the counter again when we already
+          // did so from the beginning
+          if (word == "end") {
+            firstEnd = 0;
+          } else {
+            firstEnd = 1;
+          }
+
+          // Check if the cursor is placed on a word, or if a word is selected
+          if (word) {
             let count = -1;
-            let firstEnd = 0;
             let matchedKeyword: string;
             let lineText: string;
             const regExp = new RegExp(/\bend\b/);
