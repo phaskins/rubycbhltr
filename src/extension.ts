@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 import * as vscode from 'vscode';
 import * as vsctm from 'vscode-textmate';
 import * as fs from 'fs';
@@ -10,7 +10,6 @@ let grammarPaths = {
 
 let registry = new vsctm.Registry({
   loadGrammar: function (scopeName) {
-    // console.log(scopeName)
     let languageSyntaxPath = grammarPaths[scopeName];
 
     if (languageSyntaxPath) {
@@ -58,24 +57,15 @@ export function activate(context: vscode.ExtensionContext) {
       if (range) {
         registry.loadGrammar('source.ruby').then(grammar => {
           let word = editor.document.getText(range);
-          let firstEnd;
-
-          // If the function is activated on a line that doesn't contain "end", then don't worry about not 
-          // decrementing the counter once the first keyword "end" is found. The reason for this is that the counter
-          // is initialized to -1. So if the line contains "end", we don't want to decrement the counter again when we already
-          // did so from the beginning
-          if (word == "end") {
-            firstEnd = 0;
-          } else {
-            firstEnd = 1;
-          }
 
           // Check if the cursor is placed on a word, or if a word is selected
           if (word) {
             let count = -1;
+            let firstEnd;
+            let inAMultiLineComment = 0;
             let matchedKeyword: string;
             let lineText: string;
-            const regExp = new RegExp(/\bend\b/);
+            const regExp = new RegExp(/(\bend\b|\}|\{)/);
             const regExp1 = new RegExp(/\b(if|unless|while|until)\b/);
             const regExp2 = new RegExp(/\b(begin|case|class|def|do|for|module)\b/);
             const regExp3 = new RegExp(/^\s*(if|unless|while|until)/);
@@ -84,7 +74,29 @@ export function activate(context: vscode.ExtensionContext) {
             for (let lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
               lineText = editor.document.lineAt(lineNumber).text;
 
-              // Check if the line has the word 'end'
+              // If the function is activated on a line that doesn't contain "end", then don't worry about not 
+              // decrementing the counter once the first keyword "end" is found. The reason for this is that the counter
+              // is initialized to -1. So if the line contains "end", we don't want to decrement the counter again when we already
+              // did so from the beginning
+              if (lineNumber == editor.selection.start.line && lineText.match(/end|\}/)) {
+                firstEnd = 0;
+              } else {
+                firstEnd = 1;
+              }
+
+              // Ignore multiline comments denoted by =begin/=end
+              if (lineText.match(/=end/)) {
+                inAMultiLineComment = 1;
+                continue;
+              } else if (lineText.match(/=begin/)) {
+                inAMultiLineComment = 0; 
+                continue;
+              }
+              if (inAMultiLineComment == 1) {
+                continue;
+              }
+
+              // Check if the line has the word 'end' or '}'
               if (regExp.test(lineText)) {
                 let lineTokens = grammar.tokenizeLine(lineText, null);
 
@@ -113,7 +125,24 @@ export function activate(context: vscode.ExtensionContext) {
                         isAKeyword = 0;
                       }
                     }
-                  
+
+                  // If a token matches '}', check to make sure it's not in a comment or string
+                  // If a comment or string scope is found, set inCommentOrString to 1 and
+                  // break the for loop (that's iterating over the scopes)
+                  } else if (tokenString.match(/\}/)) {
+                      inCommentOrString = 0;
+
+                      for (let i = 0; i < token.scopes.length; i++) {
+                        if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
+                          inCommentOrString = 1;
+                          break;
+                        }
+                        // Check to make sure the token is a keyword (in this case: punctionation.scope.end)
+                        if (token.scopes[i].includes('punctuation.section.scope.end')) {
+                          isAKeyword = 0;
+                        }
+                      }
+
                   // Otherwise if the token matches the keyword of a start block, check to make sure it's not
                   // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
                   // iterating over the scopes
@@ -126,6 +155,26 @@ export function activate(context: vscode.ExtensionContext) {
                           break;
                         }
                         if (token.scopes[i].includes('keyword')) {
+                          // If it's a keyword, check to make sure it's not part of a one-line conditional
+                          if (regExp2.test(tokenString) || (regExp1.test(tokenString) && regExp3.test(lineText))) {
+                            isAKeyword = 0;
+                          }
+                        }
+                      }
+
+                  // Else if the token matches '{', check to make sure it's not
+                  // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
+                  // iterating over the scopes
+                  } else if (tokenString.match(/\{/)) {
+                      startBlockInCommentOrString = 0;
+
+                      for (let i = 0; i < token.scopes.length; i++) {
+                        if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
+                          startBlockInCommentOrString = 1;
+                          break;
+                        }
+                        // Check to make sure the token is a keyword (in this case: punctionation.scope.begin)
+                        if (token.scopes[i].includes('punctuation.section.scope.begin')) {
                           isAKeyword = 0;
                         }
                       }
@@ -145,11 +194,11 @@ export function activate(context: vscode.ExtensionContext) {
                       count--;
                     }
                   }
-                }
 
-                // console.log(count);
+                  // console.log(count);
+                }
                 
-              } else if (regExp1.test(lineText )|| regExp2.test(lineText)) {
+              } else if (regExp1.test(lineText) || regExp2.test(lineText) || lineText.match(/\{/)) {
                   if (!grammar) {
                     console.error('Grammar is null!');
                   }
@@ -166,18 +215,18 @@ export function activate(context: vscode.ExtensionContext) {
                     // console.log(tokenString)
                     
                     for (let i = 0; i < token.scopes.length; i++) {
-                      if ((regExp1.test(tokenString) || regExp2.test(tokenString)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
+                      if ((regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
                         inCommentOrString = 1;
                         break;
                       }
-                      if (token.scopes[i].includes('keyword')) {
+                      if (token.scopes[i].includes('keyword') || (tokenString.match(/\{/) && token.scopes[i].includes('punctuation.section.scope.begin'))) {
                         isAKeyword = 0;
                       }
                     }
 
                     // If we have found a match, the token is a keyword, and it's not part of a comment or string,
                     // break out of the for loop iterating over the line tokens
-                    if (inCommentOrString == 0 && isAKeyword == 0 && (regExp1.test(tokenString) || regExp2.test(tokenString))) {
+                    if (inCommentOrString == 0 && isAKeyword == 0 && (regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/))) {
                       break;
                     }
 
@@ -197,7 +246,7 @@ export function activate(context: vscode.ExtensionContext) {
                   // the line and check to make sure there is nothing behind it such as a "next if" or "expression....if" 
                   // (one line block statement). These need to be ignored
                   if (inCommentOrString == 0 && isAKeyword == 0) {
-                    if (regExp2.test(matchedKeyword)) {
+                    if (regExp2.test(matchedKeyword) || matchedKeyword.match(/\{/)) {
                       count++;
 
                     } else if (regExp1.test(matchedKeyword) && regExp3.test(lineText)) {
@@ -205,31 +254,13 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                   }
 
-                // console.log(count);
+                  // console.log(count);
               }
 
+              // console.log(count);
+
               if (count == 0) {
-                // Get the color from the user settings. If the color code is invalid or the provided value is not a string,
-                // default to #BABABA
-                let color = vscode.workspace.getConfiguration('highlightColor').get('color');
-
-                if (typeof color !== 'string' || !color.match(/#[0-9A-F]{6}/)) {
-                  color = "#BABABA";
-                }
-
-                decorationType = vscode.window.createTextEditorDecorationType({
-                  backgroundColor: color
-                });
-                let firstCharIndex = /(\S)/.exec(lineText).index;
-                let highlightRange = new vscode.Range(lineNumber, firstCharIndex, lineNumber, lineText.length);
-                editor.setDecorations(decorationType, [highlightRange]);
-
-                let blockStartPosition = new vscode.Position(lineNumber, 0);
-                let currentVisibleRange = editor.visibleRanges[0];
-                // If the line isn't already visible, scroll to where the block's start line is at the top
-                if (!currentVisibleRange.contains(blockStartPosition)) {
-                  editor.revealRange(new vscode.Range(blockStartPosition, blockStartPosition), vscode.TextEditorRevealType.AtTop);
-                }
+                updateDecorations(editor, lineText, lineNumber)
                 break;
               }
             }
@@ -248,6 +279,30 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(disposable);
 
+  function updateDecorations(editor: vscode.TextEditor, lineText: string, lineNumber: number) {
+    // Get the color from the user settings. If the color code is invalid or the provided value is not a string,
+    // default to #BABABA
+    let color = vscode.workspace.getConfiguration('highlightColor').get('color');
+
+    if (typeof color !== 'string' || !color.match(/#[0-9A-F]{6}/)) {
+      color = "#BABABA";
+    }
+
+    decorationType = vscode.window.createTextEditorDecorationType({
+      backgroundColor: color
+    });
+    let firstCharIndex = /(\S)/.exec(lineText).index;
+    let highlightRange = new vscode.Range(lineNumber, firstCharIndex, lineNumber, lineText.length);
+    editor.setDecorations(decorationType, [highlightRange]);
+
+    let blockStartPosition = new vscode.Position(lineNumber, 0);
+    let currentVisibleRange = editor.visibleRanges[0];
+    // If the line isn't already visible, scroll to where the block's start line is at the top
+    if (!currentVisibleRange.contains(blockStartPosition)) {
+      editor.revealRange(new vscode.Range(blockStartPosition, blockStartPosition), vscode.TextEditorRevealType.AtTop);
+    }
+  }
+
   // Remove the highlighting upon cursor change
   vscode.window.onDidChangeTextEditorSelection(() => {
     if (decorationType) {
@@ -257,7 +312,7 @@ export function activate(context: vscode.ExtensionContext) {
         decorationType.dispose();
         decorationType = null;
       }
-    } 
+    }
   })
 }
 
