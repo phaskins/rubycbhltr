@@ -4,12 +4,14 @@ This extension is designed to help identify the starting line of a block that ma
 
 ## Usage
 
-* First, either select the word "end" (drag over the word with the mouse) or place the cursor on top of it. The cursor can be placed anywhere within, behind, or after the word "end" to work. (**EDIT: You can now initialize the command on any line to reveal the scope it's in [the start line of the scope]!**)  
-![](./images/example_selection.png)  
+* First, either select the the line (drag over it with the mouse) or place the cursor on top of it.
 * Next, trigger the command by pressing Alt + H or by choosing "Show Start Of Block" from the Command Palette.  
 ![](./images/example_highlighting.png)  
 ![](./images/example_command_selection.png)
-* The matching start line of the block will be highlighted.
+* The line that starts the innermost scope of the selected line will be highligted.  
+![](./images/example_highlighting1.png)  
+![](./images/example_highlighting2.png)  
+![](./images/example_highlighting3.png)  
 * To remove the highlight, click elsewhere on the file.
 
 ## Dependencies
