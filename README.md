@@ -16,10 +16,12 @@ This extension is designed to help identify the starting line of a block that ma
   
 ## Known Bugs
 
-* In the case where there are two or more open braces on the same line with no closing braces in between, the highlighting will fail.  
+* In the case where there are two or more open braces on the same line, with no closing braces in between, the highlighting will fail.  
 ![](./images/error_producing_code.png)  
 However, putting the code on one line will fix the bug.  
 ![](./images/error_fix.png)  
+Something like this would also work.  
+![](./images/error_fix_2.png)  
 
 ## Dependencies
 
