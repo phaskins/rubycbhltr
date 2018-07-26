@@ -260,7 +260,7 @@ export function activate(context: vscode.ExtensionContext) {
               // console.log(count);
 
               if (count == 0) {
-                updateDecorations(editor, lineText, lineNumber)
+                addDecorations(editor, lineText, lineNumber)
                 break;
               }
             }
@@ -279,7 +279,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(disposable);
 
-  function updateDecorations(editor: vscode.TextEditor, lineText: string, lineNumber: number) {
+  function addDecorations(editor: vscode.TextEditor, lineText: string, lineNumber: number) {
     // Get the color from the user settings. If the color code is invalid or the provided value is not a string,
     // default to #BABABA
     let color = vscode.workspace.getConfiguration('highlightColor').get('color');

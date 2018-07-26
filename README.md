@@ -12,7 +12,14 @@ This extension is designed to help identify the starting line of a block that ma
 ![](./images/example_highlighting1.png)  
 ![](./images/example_highlighting2.png)  
 ![](./images/example_highlighting3.png)  
-* To remove the highlight, click elsewhere on the file.
+* To remove the highlight, click elsewhere on the file.  
+  
+## Known Bugs
+
+* In the case where there are two or more open braces on the same line with no closing braces in between, the highlighting will fail.  
+![](./images/error_producing_code.png)  
+However, putting the code on one line will fix the bug.  
+![](./images/error_fix.png)  
 
 ## Dependencies
 
