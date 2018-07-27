@@ -10,7 +10,7 @@ This extension is designed to help identify the starting line of a block that ma
 ![](./images/example_command_selection.png)
   
 * The line that starts the innermost scope of the selected line will be highligted.  
-![](./images/example_highlighting1.png)![](./images/example_highlighting2.png)![](./images/example_highlighting3.png)  
+![](./images/example_highlighting_1.png)![](./images/example_highlighting_2.png)![](./images/example_highlighting_3.png)  
   
 * The extension supports Python as well, though the functionality is somewhat different than with Ruby. In Python, the parent scope of the selected line will be highlighted. Therefore if the cursor is place on an "if" conditional, for example, when the command is activated, the parent scope of that if statement will be highlighted, not the if statement itself like with Ruby. This is because the functionality for Ruby is to find the beginning of the innermost block for a certain line, including the line itself. For Python, the functionality is to match a line to its parent scope.  
 ![](./images/python_example_1.png) ![](./images/python_example_2.png) ![](./images/python_example_3.png)  
