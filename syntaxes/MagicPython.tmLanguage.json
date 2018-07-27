@@ -242,7 +242,7 @@
 		"statement-keyword": {
 			"patterns": [
 				{
-					"name": "storage.type.function.python",
+					"name": "keyword.function.python",
 					"match": "\\b((async\\s+)?\\s*def)\\b"
 				},
 				{
