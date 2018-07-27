@@ -1,7 +1,7 @@
 {
     "name": "rubycbhltr",
-    "displayName": "Ruby Code Block Highlighter",
-    "description": "Triggering the command on the keyword \"end\" will highlight the corresponding start of the block",
+    "displayName": "Ruby/Python Code Block Highlighter",
+    "description": "Triggering the command on a line will highlight the start (line) of its innermost scope",
     "icon": "images/icon.png",
     "version": "0.0.1",
     "publisher": "phaskins",
@@ -12,7 +12,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.showStartOfBlock"
+        "onCommand:extension.showStartOfBlock",
+        "onCommand:extension.showStartOfScope"
     ],
     "main": "./out/extension",
     "contributes": {
@@ -20,6 +21,10 @@
             {
                 "command": "extension.showStartOfBlock",
                 "title": "Show Start Of Block"
+            },
+            {
+              "command": "extension.showStartOfScope",
+              "title": "Show Start Of Block"
             }
         ],
         "menus": {
@@ -27,6 +32,10 @@
             {
               "command": "extension.showStartOfBlock",
               "when": "editorLangId == ruby"
+            },
+            {
+              "command": "extension.showStartOfScope",
+              "when": "editorLangId == python"
             }
           ]
         },
@@ -35,6 +44,11 @@
                 "command": "extension.showStartOfBlock",
                 "key": "alt+h",
                 "when": "editorTextFocus && editorLangId == ruby"
+            },
+            {
+              "command": "extension.showStartOfScope",
+              "key": "alt+h",
+              "when": "editorTextFocus && editorLangId == python"
             }
         ],
         "configuration": {
