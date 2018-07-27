@@ -43,4 +43,4 @@ The highlight color can be changed via the "configuration" settings:
 
 The keybinding for the extension can be changed via the "keybindings" settings  
   
-![](./images/commands_keybindings.png)
+![](./images/commands_keybindings.png)  
