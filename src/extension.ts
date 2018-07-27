@@ -12,7 +12,6 @@ let grammarPaths = {
 let registry = new vsctm.Registry({
   loadGrammar: function (scopeName) {
     let languageSyntaxPath = grammarPaths[scopeName];
-
     if (languageSyntaxPath) {
       return new Promise((resolve, reject) => {
         fs.readFile(path.resolve(__dirname, languageSyntaxPath), (error, content) => {
@@ -409,12 +408,14 @@ export function activate(context: vscode.ExtensionContext) {
     decorationType = vscode.window.createTextEditorDecorationType({
       backgroundColor: color
     });
+
     let firstCharIndex = /(\S)/.exec(lineText).index;
     let highlightRange = new vscode.Range(lineNumber, firstCharIndex, lineNumber, lineText.length);
     editor.setDecorations(decorationType, [highlightRange]);
 
     let blockStartPosition = new vscode.Position(lineNumber, 0);
     let currentVisibleRange = editor.visibleRanges[0];
+
     // If the line isn't already visible, scroll to where the block's start line is at the top
     if (!currentVisibleRange.contains(blockStartPosition)) {
       editor.revealRange(new vscode.Range(blockStartPosition, blockStartPosition), vscode.TextEditorRevealType.AtTop);
