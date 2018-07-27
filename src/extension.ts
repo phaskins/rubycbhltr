@@ -374,6 +374,41 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                       }
                     }
+
+                  // Match lines inside of dictionaries to the right scope
+                  } else if (lineText.match(/\{/)) {
+                    let lineTokens = grammar.tokenizeLine(lineText, null);
+                    // Check that "{" is not part of a comment or string scope, and that it's scope list contains 
+                    // the scope "punctuation.definition.dict.begin"
+                    for (let i = 0; i < lineTokens.tokens.length; i++) {
+                      let inCommentOrString = -1;
+                      let isAKeyword = -1;
+                      let token = lineTokens.tokens[i];
+                      let tokenString = (lineText.substring(token.startIndex, token.endIndex));
+
+                      if (tokenString.match(/\{/)) {
+                        inCommentOrString = 0;
+
+                        for (let i = 0; i < token.scopes.length; i++) {
+                          if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
+                            inCommentOrString = 1;
+                            break;
+                          }
+                          // Check to make sure the token has the scope "punctuation.definition.dict.begin"
+                          if (token.scopes[i].includes('punctuation.definition.dict.begin')) {
+                            isAKeyword = 0;
+                          }
+                        }
+
+                        if (inCommentOrString == 0 && isAKeyword == 0) {
+                          addDecorations(editor, lineText, lineNumber);
+                          return;
+
+                        } else {
+                          continue;
+                        }
+                      }
+                    }
                   }
                   
                 } else {
