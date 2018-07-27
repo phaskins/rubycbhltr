@@ -3,3 +3,5 @@
 Initial release
 ### 1.0.0
 Updated extension so that you don't need to initialize on the word 'end'. Using it on any line will reveal the scope start
+### 1.1.0
+Added Python support

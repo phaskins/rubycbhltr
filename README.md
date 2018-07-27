@@ -12,6 +12,11 @@ This extension is designed to help identify the starting line of a block that ma
 ![](./images/example_highlighting1.png)  
 ![](./images/example_highlighting2.png)  
 ![](./images/example_highlighting3.png)  
+* The extension supports Python as well  
+![](./images/python_example_1.png)  
+![](./images/python_example_2.png)  
+![](./images/python_example_3.png)  
+
 * To remove the highlight, click elsewhere on the file.  
   
 ## Known Bugs

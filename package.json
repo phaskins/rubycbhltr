@@ -24,7 +24,7 @@
             },
             {
               "command": "extension.showStartOfScope",
-              "title": "Show Start Of Block"
+              "title": "Show Start Of Scope"
             }
         ],
         "menus": {
