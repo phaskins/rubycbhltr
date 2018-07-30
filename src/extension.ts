@@ -308,24 +308,28 @@ export function activate(context: vscode.ExtensionContext) {
 
           // Check if the cursor is placed on a word, or if a word is selected
           if (word) {
+            // let indentSizeInSpaces: number = +editor.options.tabSize;
             let lineNumber = editor.selection.start.line;
-            let lineText = editor.document.lineAt(lineNumber).text;
-            let indentSizeInSpaces: number = +editor.options.tabSize;
-            let spacesBeforeStartingLine = 0;
+            let lineText = editor.document.lineAt(lineNumber).text;;
+            let spacesBeforeStartingLine = lineText.search(/\S/);
+            let spacesBeforeTargetLine;
             const regExp1 = new RegExp(/\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
             const regExp2 = new RegExp(/^\s*\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
 
-            for (let i = 0; i < lineText.length; i++) {
-              if (lineText[i].match(/\s/)) {
-                spacesBeforeStartingLine++;
-              } else {
-                break;
+            // Find the number of spaces before the previous indent
+            for (lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
+              lineText = editor.document.lineAt(lineNumber).text;
+
+              if (!lineText.match(/^\s*$/)) {
+                spacesBeforeTargetLine = lineText.search(/\S/);
+
+                if (spacesBeforeTargetLine != -1 && spacesBeforeTargetLine < spacesBeforeStartingLine) {
+                  break;
+                }
               }
             }
 
-            let spacesBeforeTargetLine = spacesBeforeStartingLine - indentSizeInSpaces;
-
-            if (spacesBeforeTargetLine >= 0) {
+            if (spacesBeforeStartingLine > 0 && spacesBeforeTargetLine >= 0) {
               // Regex to find lines with target number of indent spaces (spacesBeforeStartingLine - indentSizeSpaces)
               // Want to find lines with scope that's one indent previous to the starting line
               // i.e. ^\s{4}\S+
