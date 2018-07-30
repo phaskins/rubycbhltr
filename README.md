@@ -15,7 +15,7 @@ This extension is designed to: (Ruby) help identify the innermost block that the
   
 * The extension supports Python as well, though the functionality is somewhat different than with Ruby. In Python, the parent scope of the selected line will be highlighted. Therefore if the cursor is place on an "if" conditional, for example, when the command is activated, the parent scope of that if statement will be highlighted, not the if statement itself like with Ruby. This is because the functionality for Ruby is to find the beginning of the innermost block for a certain line, including the line itself. For Python, the functionality is to match a line to its parent scope.  
 ![](./images/python_example_1.png) ![](./images/python_example_2.png) ![](./images/python_example_3.png)  
-![](./images/python_example_4.png) ![](./images/python_example_5.png) ![](./images/python_example_6.png)    
+![](./images/python_example_4.png) ![](./images/python_example_5.png)     
   
 * To remove the highlight, click elsewhere on the file.  
   
