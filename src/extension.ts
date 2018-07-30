@@ -134,54 +134,54 @@ export function activate(context: vscode.ExtensionContext) {
                   // If a comment or string scope is found, set inCommentOrString to 1 and
                   // break the for loop (that's iterating over the scopes)
                   } else if (tokenString.match(/\}/)) {
-                      inCommentOrString = 0;
+                    inCommentOrString = 0;
 
-                      for (let i = 0; i < token.scopes.length; i++) {
-                        if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
-                          inCommentOrString = 1;
-                          break;
-                        }
-                        // Check to make sure the token is a keyword (in this case: punctionation.scope.end)
-                        if (token.scopes[i].includes('punctuation.section.scope.end')) {
-                          isAKeyword = 0;
-                        }
+                    for (let i = 0; i < token.scopes.length; i++) {
+                      if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
+                        inCommentOrString = 1;
+                        break;
                       }
+                      // Check to make sure the token is a keyword (in this case: punctionation.scope.end)
+                      if (token.scopes[i].includes('punctuation.section.scope.end')) {
+                        isAKeyword = 0;
+                      }
+                    }
 
                   // Otherwise if the token matches the keyword of a start block, check to make sure it's not
                   // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
                   // iterating over the scopes
                   } else if (regExp1.test(tokenString) || regExp2.test(tokenString)) {
-                      startBlockInCommentOrString = 0;
+                    startBlockInCommentOrString = 0;
 
-                      for (let i = 0; i < token.scopes.length; i++) {
-                        if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
-                          startBlockInCommentOrString = 1;
-                          break;
-                        }
-                        if (token.scopes[i].includes('keyword')) {
-                          // If it's a keyword, check to make sure it's not part of a one-line conditional
-                          if (regExp2.test(tokenString) || (regExp1.test(tokenString) && regExp3.test(lineText))) {
-                            isAKeyword = 0;
-                          }
+                    for (let i = 0; i < token.scopes.length; i++) {
+                      if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
+                        startBlockInCommentOrString = 1;
+                        break;
+                      }
+                      if (token.scopes[i].includes('keyword')) {
+                        // If it's a keyword, check to make sure it's not part of a one-line conditional
+                        if (regExp2.test(tokenString) || (regExp1.test(tokenString) && regExp3.test(lineText))) {
+                          isAKeyword = 0;
                         }
                       }
+                    }
 
                   // Else if the token matches '{', check to make sure it's not
                   // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
                   // iterating over the scopes
                   } else if (tokenString.match(/\{/)) {
-                      startBlockInCommentOrString = 0;
+                    startBlockInCommentOrString = 0;
 
-                      for (let i = 0; i < token.scopes.length; i++) {
-                        if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
-                          startBlockInCommentOrString = 1;
-                          break;
-                        }
-                        // Check to make sure the token is a keyword (in this case: punctionation.scope.begin)
-                        if (token.scopes[i].includes('punctuation.section.scope.begin')) {
-                          isAKeyword = 0;
-                        }
+                    for (let i = 0; i < token.scopes.length; i++) {
+                      if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
+                        startBlockInCommentOrString = 1;
+                        break;
                       }
+                      // Check to make sure the token is a keyword (in this case: punctionation.scope.begin)
+                      if (token.scopes[i].includes('punctuation.section.scope.begin')) {
+                        isAKeyword = 0;
+                      }
+                    }
                   }
 
                   // If startBlockInCommentOrString is 0 and the token is a keyword, increment the count.
@@ -203,56 +203,56 @@ export function activate(context: vscode.ExtensionContext) {
                 }
                 
               } else if (regExp1.test(lineText) || regExp2.test(lineText) || lineText.match(/\{/)) {
-                  let lineTokens = grammar.tokenizeLine(lineText, null);
-                  let inCommentOrString = 0;
-                  let isAKeyword = -1;
+                let lineTokens = grammar.tokenizeLine(lineText, null);
+                let inCommentOrString = 0;
+                let isAKeyword = -1;
 
-                  for (let i = 0; i < lineTokens.tokens.length; i++) {
-                    let token = lineTokens.tokens[i];
-                    let tokenString = (lineText.substring(token.startIndex, token.endIndex));
-                    // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
-                    matchedKeyword = tokenString;
-                    // console.log(tokenString)
-                    
-                    for (let i = 0; i < token.scopes.length; i++) {
-                      if ((regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
-                        inCommentOrString = 1;
-                        break;
-                      }
-                      if (token.scopes[i].includes('keyword') || (tokenString.match(/\{/) && token.scopes[i].includes('punctuation.section.scope.begin'))) {
-                        isAKeyword = 0;
-                      }
-                    }
-
-                    // If we have found a match, the token is a keyword, and it's not part of a comment or string,
-                    // break out of the for loop iterating over the line tokens
-                    if (inCommentOrString == 0 && isAKeyword == 0 && (regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/))) {
+                for (let i = 0; i < lineTokens.tokens.length; i++) {
+                  let token = lineTokens.tokens[i];
+                  let tokenString = (lineText.substring(token.startIndex, token.endIndex));
+                  // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
+                  matchedKeyword = tokenString;
+                  // console.log(tokenString)
+                  
+                  for (let i = 0; i < token.scopes.length; i++) {
+                    if ((regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
+                      inCommentOrString = 1;
                       break;
                     }
-
-                    // If the current token matches a start block keyword but is in a comment or string,
-                    // reset the variables and skip to the next token in the line
-                    if (inCommentOrString == 1) {
-                      inCommentOrString = 0;
-                      isAKeyword = -1;
-                      continue;
+                    if (token.scopes[i].includes('keyword') || (tokenString.match(/\{/) && token.scopes[i].includes('punctuation.section.scope.begin'))) {
+                      isAKeyword = 0;
                     }
+                  }
 
+                  // If we have found a match, the token is a keyword, and it's not part of a comment or string,
+                  // break out of the for loop iterating over the line tokens
+                  if (inCommentOrString == 0 && isAKeyword == 0 && (regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/))) {
+                    break;
+                  }
+
+                  // If the current token matches a start block keyword but is in a comment or string,
+                  // reset the variables and skip to the next token in the line
+                  if (inCommentOrString == 1) {
+                    inCommentOrString = 0;
                     isAKeyword = -1;
+                    continue;
                   }
 
-                  // If the line doesn't have an if/unless/while/until in it, go ahead and increment the count
-                  // Else if the line does contain one of those keywords, removed any comments, strings, or regexps from
-                  // the line and check to make sure there is nothing behind it such as a "next if" or "expression....if" 
-                  // (one line block statement). These need to be ignored
-                  if (inCommentOrString == 0 && isAKeyword == 0) {
-                    if (regExp2.test(matchedKeyword) || matchedKeyword.match(/\{/)) {
-                      count++;
+                  isAKeyword = -1;
+                }
 
-                    } else if (regExp1.test(matchedKeyword) && regExp3.test(lineText)) {
-                      count++;
-                    }
+                // If the line doesn't have an if/unless/while/until in it, go ahead and increment the count
+                // Else if the line does contain one of those keywords, removed any comments, strings, or regexps from
+                // the line and check to make sure there is nothing behind it such as a "next if" or "expression....if" 
+                // (one line block statement). These need to be ignored
+                if (inCommentOrString == 0 && isAKeyword == 0) {
+                  if (regExp2.test(matchedKeyword) || matchedKeyword.match(/\{/)) {
+                    count++;
+
+                  } else if (regExp1.test(matchedKeyword) && regExp3.test(lineText)) {
+                    count++;
                   }
+                }
 
                   // console.log(count);
               }
@@ -378,9 +378,11 @@ export function activate(context: vscode.ExtensionContext) {
                         }
                       }
                     }
-
-                  // Match lines inside of dictionaries to the right scope
-                  } else if (lineText.match(/(\{|\(|\[|\\)/)) {
+                  } 
+                  
+                  // Match lines inside of dictionaries to the right scope. If a keyword wasn't found in the line
+                  // check for parenthesis, braces, brackets, or backslash
+                  if (lineText.match(/(\{|\(|\[|\\)/)) {
                     let lineTokens = grammar.tokenizeLine(lineText, null);
                     // Check that "{" is not part of a comment or string scope, and that it's scope list contains 
                     // the scope "punctuation.definition.dict.begin"
