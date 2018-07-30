@@ -423,7 +423,8 @@ export function activate(context: vscode.ExtensionContext) {
                             inCommentOrString = 1;
                             break;
                           }
-                          // Check to make sure the token has the scope "punctuation.definition.dict.begin"
+                          // Check to make sure the token has the scope "punctuation.definition.arguments.begin" 
+                          // or "punctuation.parenthesis.begin"
                           if (token.scopes[i].includes('punctuation.definition.arguments.begin') || token.scopes[i].includes('punctuation.parenthesis.begin')) {
                             isAKeyword = 0;
                           }
@@ -446,7 +447,7 @@ export function activate(context: vscode.ExtensionContext) {
                             inCommentOrString = 1;
                             break;
                           }
-                          // Check to make sure the token has the scope "punctuation.definition.dict.begin"
+                          // Check to make sure the token has the scope "punctuation.definition.list.begin"
                           if (token.scopes[i].includes('punctuation.definition.list.begin')) {
                             isAKeyword = 0;
                           }
@@ -469,7 +470,7 @@ export function activate(context: vscode.ExtensionContext) {
                             inCommentOrString = 1;
                             break;
                           }
-                          // Check to make sure the token has the scope "punctuation.definition.dict.begin"
+                          // Check to make sure the token has the scope "punctuation.separator.continuation.line"
                           if (token.scopes[i].includes('punctuation.separator.continuation.line')) {
                             isAKeyword = 0;
                           }
