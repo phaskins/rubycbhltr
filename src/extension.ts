@@ -33,10 +33,9 @@ let registry = new vsctm.Registry({
 export function activate(context: vscode.ExtensionContext) {
   let decorationType: vscode.TextEditorDecorationType;
 
-  let disposable = vscode.commands.registerCommand('extension.showStartOfBlock', () => {
+  let disposable_ruby = vscode.commands.registerCommand('extension.showStartOfBlock', () => {
     // If the line is already highlighted, do nothing
     if (decorationType) {
-      // vscode.window.showInformationMessage('Line is already highlighted');
       return;
     }
 
@@ -54,6 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
         range = new vscode.Range(startPos, endPos);
       }
 
+      // Check to make sure something is selected or that the cursor is visible
       if (range) {
         registry.loadGrammar('source.ruby').then(grammar => {
           if (!grammar) {
@@ -111,7 +111,6 @@ export function activate(context: vscode.ExtensionContext) {
                   let isAKeyword = -1;
                   let token = lineTokens.tokens[i];
                   let tokenString = (lineText.substring(token.startIndex, token.endIndex));
-                  // console.log(tokenString);
 
                   // If a token matches the word 'end', check to make sure it's not in a comment or string
                   // If a comment or string scope is found, set inCommentOrString to 1 and
@@ -212,7 +211,6 @@ export function activate(context: vscode.ExtensionContext) {
                   let tokenString = (lineText.substring(token.startIndex, token.endIndex));
                   // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
                   matchedKeyword = tokenString;
-                  // console.log(tokenString)
                   
                   for (let i = 0; i < token.scopes.length; i++) {
                     if ((regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
@@ -277,10 +275,9 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  let disposable2 = vscode.commands.registerCommand('extension.showStartOfScope', () => {
+  let disposable_python = vscode.commands.registerCommand('extension.showStartOfScope', () => {
     // If the line is already highlighted, do nothing
     if (decorationType) {
-      // vscode.window.showInformationMessage('Line is already highlighted');
       return;
     }
 
@@ -298,6 +295,7 @@ export function activate(context: vscode.ExtensionContext) {
         range = new vscode.Range(startPos, endPos);
       }
 
+      // Check to make sure something is selected or that the cursor is visible
       if (range) {
         registry.loadGrammar('source.python').then(grammar => {
           if (!grammar) {
@@ -316,7 +314,7 @@ export function activate(context: vscode.ExtensionContext) {
             const regExp1 = new RegExp(/\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
             const regExp2 = new RegExp(/^\s*\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
 
-            // Find the number of spaces before the previous indent
+            // Find the number of spaces before the previous indent/parent scope
             for (lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
               lineText = editor.document.lineAt(lineNumber).text;
 
@@ -330,8 +328,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
 
             if (spacesBeforeStartingLine > 0 && spacesBeforeTargetLine >= 0) {
-              // Regex to find lines with target number of indent spaces (spacesBeforeStartingLine - indentSizeSpaces)
-              // Want to find lines with scope that's one indent previous to the starting line
+              // Regex to find lines with target number of indent spaces (spacesBeforeTargetLine)
               // i.e. ^\s{4}\S+
               let regExpString = "^\\s{" + spacesBeforeTargetLine.toString() + "}\\S+";
               let regExp = new RegExp(regExpString);
@@ -366,7 +363,7 @@ export function activate(context: vscode.ExtensionContext) {
                           }
                         }
 
-                        // If the correct line and token has been found, if the line is not a single line conditional/loop,
+                        // If the correct line and token have been found, if the line is not a single line conditional/loop,
                         // highlight the line and return
                         if (startScopeInCommentOrString == 0 && isAKeyword == 0) {
                           if (regExp2.test(lineText)) {
@@ -384,8 +381,8 @@ export function activate(context: vscode.ExtensionContext) {
                   // check for parenthesis, braces, brackets, or backslash
                   if (lineText.match(/(\{|\(|\[|\\)/)) {
                     let lineTokens = grammar.tokenizeLine(lineText, null);
-                    // Check that "{" is not part of a comment or string scope, and that it's scope list contains 
-                    // the scope "punctuation.definition.dict.begin"
+                    // Check that match is not part of a comment or string scope, and that it's scope list contains 
+                    // the proper scope name
                     for (let i = 0; i < lineTokens.tokens.length; i++) {
                       let inCommentOrString = -1;
                       let isAKeyword = -1;
@@ -504,8 +501,8 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  context.subscriptions.push(disposable);
-  context.subscriptions.push(disposable2);
+  context.subscriptions.push(disposable_ruby);
+  context.subscriptions.push(disposable_python);
 
   function addDecorations(editor: vscode.TextEditor, lineText: string, lineNumber: number) {
     // Get the color from the user settings. If the color code is invalid or the provided value is not a string,
