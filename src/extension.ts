@@ -76,7 +76,8 @@ export function activate(context: vscode.ExtensionContext) {
             let firstEnd;
             let inAMultiLineComment = 0;
             let matchedKeyword: string;
-            let matchedKeywordIndex: number;
+            let firstBlockKeyword = '';
+            let firstBlockKeywordIndex = -1;
             let lineText: string;
             const regExp = new RegExp(/(\bend\b|\}|\{)/);
             const regExp1 = new RegExp(/\b(if|unless|while|until)\b/);
@@ -195,6 +196,13 @@ export function activate(context: vscode.ExtensionContext) {
                   // If startBlockInCommentOrString is 0 and the token is a keyword, increment the count.
                   // Else if inCommentOrString == 0 and the token ('end') is a keyword, decrement the count
                   if (startBlockInCommentOrString == 0 && isAKeyword == 0) {
+                    // Find the string and index of the first block keyword in the first line
+                    // This is important if we decide we want to highlight the parent class of, let's say, an if statement
+                    // instead of having it highlight itself
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1 && !tokenString.match(/\{/)) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
                     count++;
 
                   } else if (inCommentOrString == 0 && isAKeyword == 0) {
@@ -207,20 +215,21 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                   }
 
-                  // console.log(count);
+                  console.log(count);
                 }
                 
               } else if (regExp1.test(lineText) || regExp2.test(lineText) || lineText.match(/\{/)) {
                 let lineTokens = grammar.tokenizeLine(lineText, null);
                 let inCommentOrString = 0;
                 let isAKeyword = -1;
+                let token;
+                let tokenString;
 
                 for (let i = 0; i < lineTokens.tokens.length; i++) {
-                  let token = lineTokens.tokens[i];
-                  let tokenString = (lineText.substring(token.startIndex, token.endIndex));
+                  token = lineTokens.tokens[i];
+                  tokenString = (lineText.substring(token.startIndex, token.endIndex));
                   // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
                   matchedKeyword = tokenString;
-                  matchedKeywordIndex = token.startIndex;
                   
                   for (let i = 0; i < token.scopes.length; i++) {
                     if ((regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
@@ -255,20 +264,40 @@ export function activate(context: vscode.ExtensionContext) {
                 // (one line block statement). These need to be ignored
                 if (inCommentOrString == 0 && isAKeyword == 0) {
                   if (regExp2.test(matchedKeyword) || matchedKeyword.match(/\{/)) {
+                    // Find the string and index of the first block keyword in the first line
+                    // This is important if we decide we want to highlight the parent class of, let's say, an if statement
+                    // instead of having it highlight itself
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
                     count++;
 
                   } else if (regExp1.test(matchedKeyword) && regExp3.test(lineText)) {
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
                     count++;
                   }
                 }
 
-                  // console.log(count);
+                  console.log(count);
               }
 
-              // console.log(count);
+              console.log(count);
 
               if (count == 0) {
-                //console.log(matchedKeywordIndex + matchedKeyword.length)
+                // If target line = start line (i.e. the line to be highlighted is the line the command is initialized on)
+                // If the cursor is behind the keyword: if, while, begin, do, etc. then highlight its parent scope by
+                // decrementing the count. Else if the cursor is after the keyword, go ahead and highlight the current line.
+                // This helps provide a better sense of scope. Any text after keywords such as if, while, begin, do, etc.
+                // is part of that scope. But the block statement itself belongs to its parent scope.
+                if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex != -1 && editor.selection.start.character < (firstBlockKeywordIndex + firstBlockKeyword.length + 1)) {
+                  count--;
+                  firstBlockKeywordIndex = -1;
+                  continue;
+                }
                 addDecorations(editor, lineText, lineNumber)
                 break;
               }
