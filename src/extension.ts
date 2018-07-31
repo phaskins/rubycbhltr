@@ -215,7 +215,7 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                   }
 
-                  console.log(count);
+                  // console.log(count);
                 }
                 
               } else if (regExp1.test(lineText) || regExp2.test(lineText) || lineText.match(/\{/)) {
@@ -282,10 +282,10 @@ export function activate(context: vscode.ExtensionContext) {
                   }
                 }
 
-                  console.log(count);
+                  // console.log(count);
               }
 
-              console.log(count);
+              // console.log(count);
 
               if (count == 0) {
                 // If target line = start line (i.e. the line to be highlighted is the line the command is initialized on)
