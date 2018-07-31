@@ -51,7 +51,14 @@ export function activate(context: vscode.ExtensionContext) {
       } else {
         let startPos = editor.selection.start;
         let endPos = editor.selection.end;
-        range = new vscode.Range(startPos, endPos);
+        
+        if (startPos.line != endPos.line) {
+          vscode.window.showInformationMessage('Please select content on only one line');
+          return;
+
+        } else {
+          range = new vscode.Range(startPos, endPos);
+        }
       }
 
       // Check to make sure something is selected or that the cursor is visible
@@ -293,7 +300,14 @@ export function activate(context: vscode.ExtensionContext) {
       } else {
         let startPos = editor.selection.start;
         let endPos = editor.selection.end;
-        range = new vscode.Range(startPos, endPos);
+
+        if (startPos.line != endPos.line) {
+          vscode.window.showInformationMessage('Please select content on only one line');
+          return;
+
+        } else {
+          range = new vscode.Range(startPos, endPos);
+        }
       }
 
       // Check to make sure something is selected or that the cursor is visible
