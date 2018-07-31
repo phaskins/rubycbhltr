@@ -76,6 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
             let firstEnd;
             let inAMultiLineComment = 0;
             let matchedKeyword: string;
+            let matchedKeywordIndex: number;
             let lineText: string;
             const regExp = new RegExp(/(\bend\b|\}|\{)/);
             const regExp1 = new RegExp(/\b(if|unless|while|until)\b/);
@@ -90,7 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
               // decrementing the counter once the first keyword "end" is found. The reason for this is that the counter
               // is initialized to -1. So if the line contains "end", we don't want to decrement the counter again when we already
               // did so from the beginning
-              if (lineNumber == editor.selection.start.line && lineText.match(/end|\}/)) {
+              if (lineNumber == editor.selection.start.line && lineText.match(/end/)) {
                 firstEnd = 0;
               } else {
                 firstEnd = 1;
@@ -108,7 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
                 continue;
               }
 
-              // Check if the line has the word 'end' or '}'
+              // Check if the line has the word 'end', '{', or }'
               if (regExp.test(lineText)) {
                 let lineTokens = grammar.tokenizeLine(lineText, null);
 
@@ -219,6 +220,7 @@ export function activate(context: vscode.ExtensionContext) {
                   let tokenString = (lineText.substring(token.startIndex, token.endIndex));
                   // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
                   matchedKeyword = tokenString;
+                  matchedKeywordIndex = token.startIndex;
                   
                   for (let i = 0; i < token.scopes.length; i++) {
                     if ((regExp1.test(tokenString) || regExp2.test(tokenString) || tokenString.match(/\{/)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
@@ -266,6 +268,7 @@ export function activate(context: vscode.ExtensionContext) {
               // console.log(count);
 
               if (count == 0) {
+                //console.log(matchedKeywordIndex + matchedKeyword.length)
                 addDecorations(editor, lineText, lineNumber)
                 break;
               }
