@@ -6,18 +6,21 @@ This extension is designed to: (Ruby) help identify the innermost block that the
 
 * First, either select the the line (drag over it with the mouse) or place the cursor on top of it.
 * Next, trigger the command by pressing Alt + H or by choosing "Show Start Of Block"/"Show Start Of Scope" from the Command Palette.  
-<br/><br/>
+<br/>
 ![](./images/example_highlighting.png)  
 ![](./images/command_selection_ruby.png)  
 ![](./images/command_selection_python.png)  
   
 * The line that starts the innermost block/scope of the selected line will be highlighted.  
+<br/>
 ![](./images/example_highlighting_1.png) ![](./images/example_highlighting_2.png) ![](./images/example_highlighting_3.png)  
   
 * **(RUBY)** Where you place your cursor within the line may matter. For example, if you place your cursor before, on, or directly after the keyword "if" (and it's the first keyword in the line that starts a block), the if statement's parent block will be highlighted. However, if you place your cursor completely after the keyword "if" as such: "if |" (where | is the cursor), the if statement itself will be highlighted, since you are now within its scope.  
+<br/>
 ![](./images/ruby_scope_change_example_1.png) ![](./images/ruby_scope_change_example_2.png)  
   
 * The extension supports Python as well, though the functionality is somewhat different than with Ruby. In Python, the parent scope of the selected line will be highlighted. Therefore if the cursor is place on an a line in an "elif" conditional, for example, when the command is activated, the elif will be highlighted. However with Ruby, the if statement that the elsif belongs to will be highlighted.  
+<br/>
 ![](./images/python_example_1.png) ![](./images/python_example_2.png) ![](./images/python_example_3.png)  
 ![](./images/python_example_4.png) ![](./images/python_example_5.png) ![](./images/python_example_6.png)  
   
@@ -26,10 +29,15 @@ This extension is designed to: (Ruby) help identify the innermost block that the
 ## Known Bugs
 
 * (Ruby) In the case where there are two or more open braces on the same line, with no closing braces in between, the highlighting will fail.  
+<br/>
 ![](./images/error_producing_code.png)  
-However, putting the code on one line will fix the bug. 
+<br/>
+However, putting the code on one line will fix the bug.  
+<br/>
 ![](./images/error_fix.png)  
+<br/>
 Something like this would also work.  
+<br/>
 ![](./images/error_fix_2.png)  
   
 * (Ruby) Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.  
