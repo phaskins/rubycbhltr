@@ -31,7 +31,8 @@ However, putting the code on one line will fix the bug.
 Something like this would also work.  
 ![](./images/error_fix_2.png)  
   
-* (Ruby) Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.
+* (Ruby) Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.  
+![](./images/doc_comments_error_example.png)  
 
 ## Dependencies
 
