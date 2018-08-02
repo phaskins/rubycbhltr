@@ -6,9 +6,9 @@ This extension is designed to: (Ruby) help identify the innermost block that the
 
 * First, either select the the line (drag over it with the mouse) or place the cursor on top of it.
 * Next, trigger the command by pressing Alt + H or by choosing "Show Start Of Block"/"Show Start Of Scope" from the Command Palette.<br/><br/>
-![](./images/example_highlighting.png)  
-![](./images/command_selection_ruby.png)  
-![](./images/command_selection_python.png)  
+![](./images/example_highlighting.png)<br/>
+![](./images/command_selection_ruby.png)<br/>
+![](./images/command_selection_python.png)<br/>
   
 * The line that starts the innermost block/scope of the selected line will be highlighted.<br/><br/>
 ![](./images/example_highlighting_1.png) ![](./images/example_highlighting_2.png) ![](./images/example_highlighting_3.png)  
@@ -31,7 +31,7 @@ However, putting the code on one line will fix the bug.<br/><br/>
 Something like this would also work.<br/><br/>
 ![](./images/error_fix_2.png)<br/><br/>
   
-* (Ruby) Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.  
+* (Ruby) Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.<br/><br/>
 ![](./images/doc_comments_error_example.png)  
 
 ## Dependencies
