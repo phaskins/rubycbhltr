@@ -6,6 +6,7 @@ This extension is designed to: (Ruby) help identify the innermost block that the
 
 * First, either select the the line (drag over it with the mouse) or place the cursor on top of it.
 * Next, trigger the command by pressing Alt + H or by choosing "Show Start Of Block"/"Show Start Of Scope" from the Command Palette.  
+<br/><br/>
 ![](./images/example_highlighting.png)  
 ![](./images/command_selection_ruby.png)  
 ![](./images/command_selection_python.png)  
