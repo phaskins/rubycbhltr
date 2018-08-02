@@ -1,4 +1,4 @@
-# Ruby Code Block Highlighter
+# Ruby/Python Code Block Highlighter
 
 This extension is designed to: (Ruby) help identify the innermost block that the current line belongs to, or (Python) help match the current line to its parent scope.
 
