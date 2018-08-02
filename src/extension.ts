@@ -99,10 +99,10 @@ export function activate(context: vscode.ExtensionContext) {
               }
 
               // Ignore multiline comments denoted by =begin/=end
-              if (lineText.match(/=end/)) {
+              if (lineText.match(/^=end/)) {
                 inAMultiLineComment = 1;
                 continue;
-              } else if (lineText.match(/=begin/)) {
+              } else if (lineText.match(/^=begin/)) {
                 inAMultiLineComment = 0; 
                 continue;
               }
