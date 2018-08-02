@@ -22,16 +22,18 @@ This extension is designed to: (Ruby) help identify the innermost block that the
   
 * To remove the highlight, click elsewhere on the file.  
   
-## Known Bugs
+## Known Bugs  
+  
+### Ruby
 
-* (Ruby) In the case where there are two or more open braces on the same line, with no closing braces in between, the highlighting will fail.  
+* In the case where there are two or more open braces on the same line, with no closing braces in between, the highlighting will fail.  
 ![](./images/error_producing_code.png)  
 However, putting the code on one line will fix the bug.  
 ![](./images/error_fix.png)  
 Something like this would also work.  
 ![](./images/error_fix_2.png)  
   
-* (Ruby) Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.  
+* Because of the way the code is being parsed, Doc comments (i.e. <<-DOC ..... DOC) may cause inaccuracies within the extension, such as highlighting the wrong line or not highlighting anything at all.  
 ![](./images/doc_comments_error_example.png)  
 
 ## Dependencies
