@@ -2,6 +2,7 @@
 
 import * as vscode from 'vscode';
 import { registry, addDecorations, decorationType } from './extension'
+import { IToken, ITokenizeLineResult } from '../node_modules/vscode-textmate';
 
 export function showStartOfBlockRuby() {
   // If the line is already highlighted, do nothing
@@ -12,7 +13,7 @@ export function showStartOfBlockRuby() {
   const editor = vscode.window.activeTextEditor;
 
   if (editor) {
-    let range;
+    let range: vscode.Range;
 
     if (editor.selection.isEmpty) {
       range = editor.document.getWordRangeAtPosition(editor.selection.start);
@@ -42,14 +43,14 @@ export function showStartOfBlockRuby() {
         // Check if the cursor is placed on a word, or if a word is selected
         if (word) {
           let count = -1;
-          let firstEnd;
+          let firstEnd: number;
           let foundDocComment = 0;
           let inAMultiLineComment = 0;
           let matchedKeyword: string;
           let firstBlockKeyword = '';
           let firstBlockKeywordIndex = -1;
           let lineText: string;
-          let hereDocBeginRegExp;
+          let hereDocBeginRegExp: RegExp;
           const hereDocEndRegExp = new RegExp(/^\s*([\w]+)$/);
           const regExp = new RegExp(/(\bend\b|\}|\{)/);
           const regExp1 = new RegExp(/\b(if|unless|while|until)\b/);
@@ -85,7 +86,7 @@ export function showStartOfBlockRuby() {
             // Check for possible heredoc declarations. Skip each line until the begin heredoc delimiter is found
             if (lineText.match(hereDocEndRegExp)) {
               let heredocDelimiter = lineText.match(hereDocEndRegExp)[1];
-              let currentLineTokens;
+              let currentLineTokens: ITokenizeLineResult;
               let ruleStack = null;
               let matchedScopes = 0;
 
@@ -259,8 +260,8 @@ export function showStartOfBlockRuby() {
               let lineTokens = grammar.tokenizeLine(lineText, null);
               let inCommentOrString = 0;
               let isAKeyword = -1;
-              let token;
-              let tokenString;
+              let token: IToken;
+              let tokenString: string;
 
               for (let i = 0; i < lineTokens.tokens.length; i++) {
                 token = lineTokens.tokens[i];

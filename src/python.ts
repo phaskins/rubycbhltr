@@ -12,7 +12,7 @@ export function showStartOfBlockPython() {
   const editor = vscode.window.activeTextEditor;
 
   if (editor) {
-    let range;
+    let range: vscode.Range;
 
     if (editor.selection.isEmpty) {
       range = editor.document.getWordRangeAtPosition(editor.selection.start);
@@ -45,7 +45,7 @@ export function showStartOfBlockPython() {
           let lineNumber = editor.selection.start.line;
           let lineText = editor.document.lineAt(lineNumber).text;;
           let spacesBeforeStartingLine = lineText.search(/\S/);
-          let spacesBeforeTargetLine;
+          let spacesBeforeTargetLine: number;
           const regExp1 = new RegExp(/\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
           const regExp2 = new RegExp(/^\s*\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
 
