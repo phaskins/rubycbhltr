@@ -107,11 +107,10 @@ export function showStartOfBlockPython() {
                   }
                 }
 
-                // And matches one of the keywords we're looking for...
+                // If the current line matches one of the keywords we're looking for...
                 if (regExp1.test(lineText)) {
                   let lineTokens = grammar.tokenizeLine(lineText, null);
-                  // Go through each token in the line to find the keyword. Check that it's not part of a comment or string
-                  // scope, and that it's scope list contains the word "keyword"
+                  // Go through each token in the line to find the keyword
                   for (let i = 0; i < lineTokens.tokens.length; i++) {
                     let startScopeInCommentOrString = -1;
                     let isAKeyword = -1;
@@ -121,19 +120,20 @@ export function showStartOfBlockPython() {
                     if (regExp1.test(tokenString)) {
                       startScopeInCommentOrString = 0;
 
+                      // Check that it's not part of a comment or string scope, and that it's scope list 
+                      // contains the word "keyword"
                       for (let i = 0; i < token.scopes.length; i++) {
                         if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
                           startScopeInCommentOrString = 1;
                           break;
                         }
-                        // Check to make sure the token is a keyword
                         if (token.scopes[i].includes('keyword')) {
                           isAKeyword = 0;
                         }
                       }
 
-                      // If the correct line and token have been found, if the line is not a single line conditional/loop,
-                      // highlight the line and return
+                      // If the correct line and token have been found, and if the line is not a single line 
+                      // conditional/loop, highlight the line and return
                       if (startScopeInCommentOrString == 0 && isAKeyword == 0) {
                         if (regExp2.test(lineText)) {
                           addDecorations(editor, lineText, lineNumber);
@@ -150,8 +150,7 @@ export function showStartOfBlockPython() {
                 // check for parenthesis, braces, brackets, backslash, or variables with multiline comments as values
                 if (lineText.match(/(\{|\(|\[|\\|^\s*\w+\s*=\s*[\"\']{3})/)) {
                   let lineTokens = grammar.tokenizeLine(lineText, null);
-                  // Check that match is not part of a comment or string scope, and that it's scope list contains 
-                  // the proper scope name
+
                   for (let i = 0; i < lineTokens.tokens.length; i++) {
                     let inCommentOrString = -1;
                     let isAKeyword = -1;
@@ -161,12 +160,14 @@ export function showStartOfBlockPython() {
                     if (tokenString.match(/\{/)) {
                       inCommentOrString = 0;
 
+                      // Check that match is not part of a comment or string scope, and that it's scope list contains 
+                      // the proper scope name
                       for (let i = 0; i < token.scopes.length; i++) {
                         if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
                           inCommentOrString = 1;
                           break;
                         }
-                        // Check to make sure the token has the scope "punctuation.definition.dict.begin"
+
                         if (token.scopes[i].includes('punctuation.definition.dict.begin')) {
                           isAKeyword = 0;
                         }
@@ -189,8 +190,7 @@ export function showStartOfBlockPython() {
                           inCommentOrString = 1;
                           break;
                         }
-                        // Check to make sure the token has the scope "punctuation.definition.arguments.begin" 
-                        // or "punctuation.parenthesis.begin"
+
                         if (token.scopes[i].includes('punctuation.definition.arguments.begin') || token.scopes[i].includes('punctuation.parenthesis.begin')) {
                           isAKeyword = 0;
                         }
@@ -213,7 +213,7 @@ export function showStartOfBlockPython() {
                           inCommentOrString = 1;
                           break;
                         }
-                        // Check to make sure the token has the scope "punctuation.definition.list.begin"
+
                         if (token.scopes[i].includes('punctuation.definition.list.begin')) {
                           isAKeyword = 0;
                         }
@@ -236,7 +236,7 @@ export function showStartOfBlockPython() {
                           inCommentOrString = 1;
                           break;
                         }
-                        // Check to make sure the token has the scope "punctuation.separator.continuation.line"
+
                         if (token.scopes[i].includes('punctuation.separator.continuation.line')) {
                           isAKeyword = 0;
                         }
@@ -262,7 +262,7 @@ export function showStartOfBlockPython() {
                           inCommentOrString = 1;
                           break;
                         }
-                        // Check to make sure the token has the scope "punctuation.definition.string.begin"
+
                         if (token.scopes[i].includes('punctuation.definition.string.begin')) {
                           isAKeyword = 0;
                         }

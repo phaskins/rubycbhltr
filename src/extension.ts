@@ -36,14 +36,12 @@ export var registry = new vsctm.Registry({
 export var decorationType: vscode.TextEditorDecorationType;
 
 export function activate(context: vscode.ExtensionContext) {
-  
   let disposable_ruby = vscode.commands.registerCommand('extension.showStartOfBlock', showStartOfBlockRuby);
   let disposable_python = vscode.commands.registerCommand('extension.showStartOfScope', showStartOfBlockPython);
 
   context.subscriptions.push(disposable_ruby);
   context.subscriptions.push(disposable_python);
 
-  
   // Remove the highlighting upon cursor change
   vscode.window.onDidChangeTextEditorSelection(() => {
     if (decorationType) {

@@ -56,14 +56,14 @@ export function showStartOfBlockRuby() {
           const regExp2 = new RegExp(/\b(begin|case|class|def|do|for|module)\b/);
           const regExp3 = new RegExp(/^\s*\b(if|unless|while|until)\b/);
 
-          // The line number returned is off by 1 (line numbers start at 0 instead of at 1, like in the editor)
+          // The line number returned is off by 1 (line numbers start at 0, instead of at 1 like in the editor)
           for (let lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
             lineText = editor.document.lineAt(lineNumber).text;
 
-            // If the function is activated on a line that doesn't contain "end", then don't worry about not 
-            // decrementing the counter once the first keyword "end" is found. The reason for this is that the counter
-            // is initialized to -1. So if the line contains "end", we don't want to decrement the counter again when we already
-            // did so from the beginning
+            // If the function is activated on a line that does not contain "end", then go ahead and decrement the 
+            // counter once the first keyword "end" is found (like normal). The reason for this is that the count
+            // is initialized to -1 on the line we start at. So if the line contains "end", we don't want to decrement 
+            // the counter again when we already did so from the beginning
             if (lineNumber == editor.selection.start.line && lineText.match(/end/)) {
               firstEnd = 0;
             } else {
@@ -168,7 +168,7 @@ export function showStartOfBlockRuby() {
 
                 // If a token matches the word 'end', check to make sure it's not in a comment or string
                 // If a comment or string scope is found, set inCommentOrString to 1 and
-                // break the for loop (that's iterating over the scopes)
+                // break the for loop (that's iterating over the scopes). Do something similar for "}"
                 if (tokenString.match(/\bend\b/)) {
                   inCommentOrString = 0;
 
@@ -183,9 +183,6 @@ export function showStartOfBlockRuby() {
                     }
                   }
 
-                  // If a token matches '}', check to make sure it's not in a comment or string
-                  // If a comment or string scope is found, set inCommentOrString to 1 and
-                  // break the for loop (that's iterating over the scopes)
                 } else if (tokenString.match(/\}/)) {
                   inCommentOrString = 0;
 
@@ -202,7 +199,7 @@ export function showStartOfBlockRuby() {
 
                   // Otherwise if the token matches the keyword of a start block, check to make sure it's not
                   // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
-                  // iterating over the scopes
+                  // iterating over the scopes. Do something similar for "{"
                 } else if (regExp1.test(tokenString) || regExp2.test(tokenString)) {
                   startBlockInCommentOrString = 0;
 
@@ -219,9 +216,6 @@ export function showStartOfBlockRuby() {
                     }
                   }
 
-                  // Else if the token matches '{', check to make sure it's not
-                  // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
-                  // iterating over the scopes
                 } else if (tokenString.match(/\{/)) {
                   startBlockInCommentOrString = 0;
 
@@ -238,9 +232,9 @@ export function showStartOfBlockRuby() {
                 }
 
                 // If startBlockInCommentOrString is 0 and the token is a keyword, increment the count.
-                // Else if inCommentOrString == 0 and the token ('end') is a keyword, decrement the count
+                // Else if inCommentOrString == 0 and the token is a keyword ("end", "{"), decrement the count
                 if (startBlockInCommentOrString == 0 && isAKeyword == 0) {
-                  // Find the string and index of the first block keyword in the first line
+                  // Find the string and index of the first block keyword in the first line.
                   // This is important if we decide we want to highlight the parent class of, let's say, an if statement
                   // instead of having it highlight itself
                   if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1 && !tokenString.match(/\{/)) {
@@ -250,7 +244,7 @@ export function showStartOfBlockRuby() {
                   count++;
 
                 } else if (inCommentOrString == 0 && isAKeyword == 0) {
-                  // Do not decrement the counter for the first "end" encountered. That is already
+                  // Do not decrement the count for the first "end" encountered. That is already
                   // accounted for when count is set to -1
                   if (firstEnd == 0) {
                     firstEnd = 1;
@@ -301,10 +295,6 @@ export function showStartOfBlockRuby() {
                 isAKeyword = -1;
               }
 
-              // If the line doesn't have an if/unless/while/until in it, go ahead and increment the count
-              // Else if the line does contain one of those keywords, removed any comments, strings, or regexps from
-              // the line and check to make sure there is nothing behind it such as a "next if" or "expression....if" 
-              // (one line block statement). These need to be ignored
               if (inCommentOrString == 0 && isAKeyword == 0) {
                 if (regExp2.test(matchedKeyword) || matchedKeyword.match(/\{/)) {
                   // Find the string and index of the first block keyword in the first line
@@ -316,6 +306,9 @@ export function showStartOfBlockRuby() {
                   }
                   count++;
 
+                  // If the line doesn't have an if/unless/while/until in it, go ahead and increment the count.
+                  // But if the line does contain one of those keywords, check to make sure there is only whitespace
+                  // before it (don't want to match one line statements)
                 } else if (regExp1.test(matchedKeyword) && regExp3.test(lineText)) {
                   if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
                     firstBlockKeyword = tokenString;
