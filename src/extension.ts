@@ -75,7 +75,6 @@ export function activate(context: vscode.ExtensionContext) {
             let count = -1;
             let firstEnd;
             let foundDocComment = 0;
-            let heredocDelimiter;
             let inAMultiLineComment = 0;
             let matchedKeyword: string;
             let firstBlockKeyword = '';
@@ -134,7 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
                   if (tokenString.match(heredocDelimiter)) {
 
                     for (let i = 0; i < token.scopes.length; i++) {
-                      // Check to make sure the token is a keyword
+                      // Check to make sure the token has these specific keywords
                       if (token.scopes[i].includes('punctuation.definition.string.end') || token.scopes[i].includes('string.unquoted.heredoc')) {
                         matchedScopes++;
                       }
@@ -166,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
                     if (tokenString.match(hereDocBeginRegExp)) {
 
                       for (let i = 0; i < token.scopes.length; i++) {
-                        // Check to make sure the token is a keyword
+                        // Check to make sure the token has these specific keywords
                         if (token.scopes[i].includes('punctuation.definition.string.begin') || token.scopes[i].includes('string.unquoted.heredoc')) {
                           matchedScopes++;
                         }
