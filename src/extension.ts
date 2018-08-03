@@ -74,11 +74,15 @@ export function activate(context: vscode.ExtensionContext) {
           if (word) {
             let count = -1;
             let firstEnd;
+            let foundDocComment = 0;
+            let heredocDelimiter;
             let inAMultiLineComment = 0;
             let matchedKeyword: string;
             let firstBlockKeyword = '';
             let firstBlockKeywordIndex = -1;
             let lineText: string;
+            let hereDocBeginRegExp;
+            const hereDocEndRegExp = new RegExp(/^\s*([\w]+)$/);
             const regExp = new RegExp(/(\bend\b|\}|\{)/);
             const regExp1 = new RegExp(/\b(if|unless|while|until)\b/);
             const regExp2 = new RegExp(/\b(begin|case|class|def|do|for|module)\b/);
@@ -108,6 +112,78 @@ export function activate(context: vscode.ExtensionContext) {
               }
               if (inAMultiLineComment == 1) {
                 continue;
+              }
+
+              // Check for possible heredoc declarations. Skip each line until the begin heredoc delimiter is found
+              if (lineText.match(hereDocEndRegExp)) {
+                let heredocDelimiter = lineText.match(hereDocEndRegExp)[1];
+                let currentLineTokens;
+                let ruleStack = null;
+                let matchedScopes = 0;
+
+                for (let line = 0; line <= lineNumber; line++) {
+                  let text = editor.document.lineAt(line).text;
+                  currentLineTokens = grammar.tokenizeLine(text, ruleStack);
+                  ruleStack = currentLineTokens.ruleStack;
+                }
+                 
+                for (let i = 0; i < currentLineTokens.tokens.length; i++) {
+                  let token = currentLineTokens.tokens[i];
+                  let tokenString = (lineText.substring(token.startIndex, token.endIndex));
+
+                  if (tokenString.match(heredocDelimiter)) {
+
+                    for (let i = 0; i < token.scopes.length; i++) {
+                      // Check to make sure the token is a keyword
+                      if (token.scopes[i].includes('punctuation.definition.string.end') || token.scopes[i].includes('string.unquoted.heredoc')) {
+                        matchedScopes++;
+                      }
+                    }
+                  }
+                }
+
+                // We have found the ending of a heredoc
+                if (matchedScopes == 2) {
+                  let hereDocBeginString = "\<\<[-~]?" + heredocDelimiter;
+                  hereDocBeginRegExp = new RegExp(hereDocBeginString);
+                  foundDocComment = 1;
+                  continue;
+                }
+              }
+
+              // If we are within the scope of a heredoc, check for the beginning of the heredoc. If found,
+              // we can resume our bracket matching. Otherwise, we can skip each line until we find it
+              if (foundDocComment == 1) {
+                if (lineText.match(hereDocBeginRegExp)) {
+                  let currentLineTokens = grammar.tokenizeLine(lineText, null);
+                  let matchedScopes = 0;
+
+                  // Check to make sure it's not part of a comment or regular string
+                  for (let i = 0; i < currentLineTokens.tokens.length; i++) {
+                    let token = currentLineTokens.tokens[i];
+                    let tokenString = (lineText.substring(token.startIndex, token.endIndex));
+
+                    if (tokenString.match(hereDocBeginRegExp)) {
+
+                      for (let i = 0; i < token.scopes.length; i++) {
+                        // Check to make sure the token is a keyword
+                        if (token.scopes[i].includes('punctuation.definition.string.begin') || token.scopes[i].includes('string.unquoted.heredoc')) {
+                          matchedScopes++;
+                        }
+                      }
+                    }
+                  }
+
+                  // We have found the beginning of a heredoc. Stop skipping lines and don't skip the current line
+                  if (matchedScopes == 2) {
+                    foundDocComment = 0;
+                  } else {
+                    continue;
+                  }
+
+                } else {
+                  continue;
+                }
               }
 
               // Check if the line has the word 'end', '{', or }'
@@ -214,7 +290,6 @@ export function activate(context: vscode.ExtensionContext) {
                       count--;
                     }
                   }
-
                   // console.log(count);
                 }
                 
@@ -281,7 +356,6 @@ export function activate(context: vscode.ExtensionContext) {
                     count++;
                   }
                 }
-
                   // console.log(count);
               }
 
@@ -293,11 +367,12 @@ export function activate(context: vscode.ExtensionContext) {
                 // decrementing the count. Else if the cursor is after the keyword, go ahead and highlight the current line.
                 // This helps provide a better sense of scope. Any text after keywords such as if, while, begin, do, etc.
                 // is part of that scope. But the block statement itself belongs to its parent scope.
-                if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex != -1 && editor.selection.start.character < (firstBlockKeywordIndex + firstBlockKeyword.length + 1)) {
+                if (firstBlockKeywordIndex != -1 && lineNumber == editor.selection.start.line && editor.selection.start.character < (firstBlockKeywordIndex + firstBlockKeyword.length + 1)) {
                   count--;
                   firstBlockKeywordIndex = -1;
                   continue;
                 }
+
                 addDecorations(editor, lineText, lineNumber)
                 break;
               }
