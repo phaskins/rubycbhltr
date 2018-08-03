@@ -1,35 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as vsctm from 'vscode-textmate';
-import * as fs from 'fs';
-import * as path from 'path';
-import { addDecorations, decorationType } from './extension'
-
-let grammarPaths = {
-  'source.ruby': '../syntaxes/ruby.tmLanguage.json',
-};
-
-let registry = new vsctm.Registry({
-  loadGrammar: function (scopeName) {
-    let languageSyntaxPath = grammarPaths[scopeName];
-    if (languageSyntaxPath) {
-      return new Promise((resolve, reject) => {
-        fs.readFile(path.resolve(__dirname, languageSyntaxPath), (error, content) => {
-          if (error) {
-            console.log(error);
-            console.log(__dirname);
-            reject(error);
-          } else {
-            let rawGrammar = vsctm.parseRawGrammar(content.toString(), languageSyntaxPath);
-            resolve(rawGrammar);
-          }
-        });
-      });
-    }
-    return null;
-  }
-});
+import { registry, addDecorations, decorationType } from './extension'
 
 export function showStartOfBlockRuby() {
   // If the line is already highlighted, do nothing
