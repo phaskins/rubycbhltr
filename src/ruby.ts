@@ -1,8 +1,8 @@
 'use strict';
 
 import * as vscode from 'vscode';
+import { IToken, ITokenizeLineResult } from 'vscode-textmate';
 import { registry, addDecorations, decorationType } from './extension'
-import { IToken, ITokenizeLineResult } from '../node_modules/vscode-textmate';
 
 export function showStartOfBlockRuby() {
   // If the line is already highlighted, do nothing
@@ -238,7 +238,7 @@ export function showStartOfBlockRuby() {
                   // Find the string and index of the first block keyword in the first line.
                   // This is important if we decide we want to highlight the parent class of, let's say, an if statement
                   // instead of having it highlight itself
-                  if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1 && !tokenString.match(/\{/)) {
+                  if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
                     firstBlockKeyword = tokenString;
                     firstBlockKeywordIndex = token.startIndex;
                   }
