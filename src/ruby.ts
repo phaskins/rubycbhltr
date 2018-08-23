@@ -81,11 +81,13 @@ export function showStartOfBlockRuby() {
                     prevState = 9;
                   }
                   break;
+
                 case (tokenString == '#'):
                   if (prevState == 0 || prevState == 1) {
                     skipToNextLine = 1;
                   }
                   break;
+
                 case(tokenString == 'begin'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9 ) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -95,6 +97,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'case'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -104,6 +107,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'class'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -113,6 +117,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'def'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -122,6 +127,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'do'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -131,6 +137,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'for'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9 ) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -140,6 +147,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'if'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -149,6 +157,7 @@ export function showStartOfBlockRuby() {
                     prevState = 6;
                   }
                   break;
+
                 case (tokenString == 'module'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -158,6 +167,7 @@ export function showStartOfBlockRuby() {
                     prevState = 5;
                   }
                   break;
+
                 case (tokenString == 'unless'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -167,6 +177,7 @@ export function showStartOfBlockRuby() {
                     prevState = 6;
                   }
                   break;
+
                 case (tokenString == 'until'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -176,6 +187,7 @@ export function showStartOfBlockRuby() {
                     prevState = 6;
                   }
                   break;
+
                 case (tokenString == 'while'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
@@ -185,6 +197,7 @@ export function showStartOfBlockRuby() {
                     prevState = 6;
                   }
                   break;
+
                 case (tokenString == '{'):
                   containsScope = isScopeInScopeArray(token, 'punctuation.section.scope.begin');
                   let inString = isScopeInScopeArray(token, 'string')
@@ -194,6 +207,7 @@ export function showStartOfBlockRuby() {
                   }
                   prevState = 5;
                   break;
+
                 case (tokenString == 'end'):
                   // If the function is activated on a line that does not contain "end", then go ahead and decrement the 
                   // counter once the first keyword "end" is found (like normal). The reason for this is that the count
@@ -209,6 +223,7 @@ export function showStartOfBlockRuby() {
                     prevState = 7;
                   }
                   break;
+
                 case (tokenString == '}'):
                   if (lineNumber == editor.selection.start.line && firstEndCharFound == 0) {
                     firstEndCharFound = 1;
@@ -222,6 +237,7 @@ export function showStartOfBlockRuby() {
                     prevState = 7;
                   }
                   break;
+
                 default: 
                   prevState = 8;
               }
