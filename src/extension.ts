@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as vsctm from 'vscode-textmate';
 import * as fs from 'fs';
 import * as path from 'path';
-import { showStartOfBlockRuby } from './ruby2'
+import { showStartOfBlockRuby } from './ruby'
 import { showStartOfBlockPython } from './python'
 
 let grammarPaths = {
