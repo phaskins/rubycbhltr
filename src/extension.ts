@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as vsctm from 'vscode-textmate';
 import * as fs from 'fs';
 import * as path from 'path';
-import { showStartOfBlockRuby } from './ruby'
+import { showStartOfBlockRuby } from './ruby2'
 import { showStartOfBlockPython } from './python'
 
 let grammarPaths = {
@@ -81,6 +81,5 @@ export function addDecorations(editor: vscode.TextEditor, lineText: string, line
   }
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {
 }
