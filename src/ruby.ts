@@ -5,7 +5,6 @@ import { IToken } from 'vscode-textmate';
 import { registry, addDecorations, decorationType } from './extension'
 
 export function showStartOfBlockRuby() {
-  console.time('Total Runtime')
   // If the line is already highlighted, do nothing
   if (decorationType) {
     return;
@@ -89,7 +88,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case(tokenString == 'begin'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9 ) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -98,7 +97,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'case'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -107,7 +106,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'class'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -116,7 +115,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'def'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -125,7 +124,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'do'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -134,7 +133,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'for'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9 ) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -143,7 +142,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'if'):
                   if (prevState == 0 || prevState == 1) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -152,7 +151,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'module'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -161,7 +160,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'unless'):
                   if (prevState == 0 || prevState == 1) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -170,7 +169,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'until'):
                   if (prevState == 0 || prevState == 1) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -179,7 +178,7 @@ export function showStartOfBlockRuby() {
                   break;
                 case (tokenString == 'while'):
                   if (prevState == 0 || prevState == 1) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count++;
                     }
@@ -187,8 +186,9 @@ export function showStartOfBlockRuby() {
                   }
                   break;
                 case (tokenString == '{'):
-                  containsScope = scopeInScopeArray(token, 'punctuation.section.scope.begin');
-                  let inString = scopeInScopeArray(token, 'string')
+                  containsScope = isScopeInScopeArray(token, 'punctuation.section.scope.begin');
+                  let inString = isScopeInScopeArray(token, 'string')
+
                   if (containsScope == 0 && inString == 1) {
                     count++;
                   }
@@ -202,7 +202,7 @@ export function showStartOfBlockRuby() {
                   if (lineNumber == editor.selection.start.line && firstEndCharFound == 0) {
                     firstEndCharFound = 1;
                   } else if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
-                    containsScope = scopeInScopeArray(token, 'keyword');
+                    containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
                       count--;
                     }
@@ -213,8 +213,9 @@ export function showStartOfBlockRuby() {
                   if (lineNumber == editor.selection.start.line && firstEndCharFound == 0) {
                     firstEndCharFound = 1;
                   } else {
-                    containsScope = scopeInScopeArray(token, 'punctuation.section.scope.end');
-                    let inString = scopeInScopeArray(token, 'string')
+                    containsScope = isScopeInScopeArray(token, 'punctuation.section.scope.end');
+                    let inString = isScopeInScopeArray(token, 'string')
+
                     if (containsScope == 0 && inString == 1) {
                       count--;
                     }
@@ -241,9 +242,6 @@ export function showStartOfBlockRuby() {
             }
 
             if (count == 0) {
-              // console.log(lineTokenLoopIterations)
-              // console.log(scopeLoopIterations)
-              // console.timeEnd('Total Runtime')
               addDecorations(editor, lineText, lineNumber)
               break;
             }
@@ -261,7 +259,7 @@ export function showStartOfBlockRuby() {
   }
 }
 
-function scopeInScopeArray(token: IToken, string: string): number {
+function isScopeInScopeArray(token: IToken, string: string): number {
   for (let i = 0; i < token.scopes.length; i++) {
     if (token.scopes[i].includes(string)) {
       return 0;
