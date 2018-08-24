@@ -50,6 +50,8 @@ export function showStartOfBlockRuby() {
           let endMultiLineCommentRegEx = /^=end/;
           let multiLineComment = 0;
 
+          // console.time('Whole Line Runtime')
+
           for (let lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
             lineText = editor.document.lineAt(lineNumber).text;
             let lineTokens = grammar.tokenizeLine(lineText, null);
@@ -259,6 +261,7 @@ export function showStartOfBlockRuby() {
 
             if (count == 0) {
               addDecorations(editor, lineText, lineNumber)
+              // console.timeEnd('Whole Line Runtime')
               break;
             }
           }  
@@ -283,4 +286,3 @@ function isScopeInScopeArray(token: IToken, string: string): number {
   }
   return 1;
 }
-

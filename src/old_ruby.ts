@@ -5,7 +5,6 @@ import { IToken, ITokenizeLineResult } from 'vscode-textmate';
 import { registry, addDecorations, decorationType } from './extension'
 
 export function showStartOfBlockRuby() {
-  console.time('Total Runtime')
   // If the line is already highlighted, do nothing
   if (decorationType) {
     return;
@@ -43,8 +42,8 @@ export function showStartOfBlockRuby() {
 
         // Check if the cursor is placed on a word, or if a word is selected
         if (word) {
-          let lineTokenLoopIterations = 0
-          let scopeLoopIterations = 0
+          // let lineTokenLoopIterations = 0
+          // let scopeLoopIterations = 0
           let count = -1;
           let firstEnd: number;
           let foundDocComment = 0;
@@ -60,10 +59,12 @@ export function showStartOfBlockRuby() {
           const regExp2 = new RegExp(/\b(begin|case|class|def|do|for|module)\b/);
           const regExp3 = new RegExp(/^\s*\b(if|unless|while|until)\b/);
 
+          console.time('Total Runtime')
+
           // The line number returned is off by 1 (line numbers start at 0, instead of at 1 like in the editor)
           for (let lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
-            console.log(lineNumber + 1)
-            console.time('Whole Line Runtime')
+            // console.log(lineNumber + 1)
+            // console.time('Whole Line Runtime')
             lineText = editor.document.lineAt(lineNumber).text;
 
             // Skip over commented lines
@@ -169,10 +170,10 @@ export function showStartOfBlockRuby() {
             if (regExp.test(lineText)) {
               let lineTokens = grammar.tokenizeLine(lineText, null);
 
-              console.time('end lineTokens for loop')
+              // console.time('end lineTokens for loop')
               // Tokenize the line and iterate through each token
               for (let i = 0; i < lineTokens.tokens.length; i++) {
-                lineTokenLoopIterations++;
+                // lineTokenLoopIterations++;
                 let inCommentOrString = -1;
                 let startBlockInCommentOrString = -1;
                 let isAKeyword = -1;
@@ -185,10 +186,10 @@ export function showStartOfBlockRuby() {
                 if (/\bend\b/.test(tokenString)) {
                   inCommentOrString = 0;
 
-                  console.time('end tokenScope for loop')
+                  // console.time('end tokenScope for loop')
 
                   for (let i = 0; i < token.scopes.length; i++) {
-                    scopeLoopIterations++;
+                    // scopeLoopIterations++;
                     if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
                       inCommentOrString = 1;
                       break;
@@ -199,15 +200,15 @@ export function showStartOfBlockRuby() {
                     }
                   }
 
-                  console.timeEnd('end tokenScope for loop')
+                  // console.timeEnd('end tokenScope for loop')
 
                 } else if (/\}/.test(tokenString)) {
                   inCommentOrString = 0;
 
-                  console.time('end tokenScope for loop')
+                  // console.time('end tokenScope for loop')
 
                   for (let i = 0; i < token.scopes.length; i++) {
-                    scopeLoopIterations++
+                    // scopeLoopIterations++
                     if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
                       inCommentOrString = 1;
                       break;
@@ -218,7 +219,7 @@ export function showStartOfBlockRuby() {
                     }
                   }
 
-                  console.timeEnd('end tokenScope for loop')
+                  // console.timeEnd('end tokenScope for loop')
 
                   // Otherwise if the token matches the keyword of a start block, check to make sure it's not
                   // in a comment or string. If so, set startBlockCommentOrString to 1 and break the for loop
@@ -226,10 +227,10 @@ export function showStartOfBlockRuby() {
                 } else if (regExp1.test(tokenString) || regExp2.test(tokenString)) {
                   startBlockInCommentOrString = 0;
 
-                  console.time('end tokenScope for loop')
+                  // console.time('end tokenScope for loop')
 
                   for (let i = 0; i < token.scopes.length; i++) {
-                    scopeLoopIterations++;
+                    // scopeLoopIterations++;
                     if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
                       startBlockInCommentOrString = 1;
                       break;
@@ -242,15 +243,15 @@ export function showStartOfBlockRuby() {
                     }
                   }
 
-                  console.timeEnd('end tokenScope for loop')
+                  // console.timeEnd('end tokenScope for loop')
 
                 } else if (/\{/.test(tokenString)) {
                   startBlockInCommentOrString = 0;
 
-                  console.time('end tokenScope for loop')
+                  // console.time('end tokenScope for loop')
 
                   for (let i = 0; i < token.scopes.length; i++) {
-                    scopeLoopIterations++;
+                    // scopeLoopIterations++;
                     if (token.scopes[i].includes('comment') || token.scopes[i].includes('string')) {
                       startBlockInCommentOrString = 1;
                       break;
@@ -261,7 +262,7 @@ export function showStartOfBlockRuby() {
                     }
                   }
 
-                  console.time('end tokenScope for loop')
+                  // console.time('end tokenScope for loop')
                 }
 
                 // If startBlockInCommentOrString is 0 and the token is a keyword, increment the count.
@@ -289,7 +290,7 @@ export function showStartOfBlockRuby() {
                 // console.log(count);
               }
 
-              console.timeEnd('end lineTokens for loop')
+              // console.timeEnd('end lineTokens for loop')
 
             } else if (regExp1.test(lineText) || regExp2.test(lineText) || /\{/.test(lineText)) {
               let lineTokens = grammar.tokenizeLine(lineText, null);
@@ -298,19 +299,19 @@ export function showStartOfBlockRuby() {
               let token: IToken;
               let tokenString: string;
 
-              console.time('begin lineTokens for loop')
+              // console.time('begin lineTokens for loop')
 
               for (let i = 0; i < lineTokens.tokens.length; i++) {
-                lineTokenLoopIterations++;
+                // lineTokenLoopIterations++;
                 token = lineTokens.tokens[i];
                 tokenString = (lineText.substring(token.startIndex, token.endIndex));
                 // Updated matchedKeyword. When this variable is checked at the end, it should contain the match
                 matchedKeyword = tokenString;
 
-                console.time('begin tokenScope for loop')
+                // console.time('begin tokenScope for loop')
 
                 for (let i = 0; i < token.scopes.length; i++) {
-                  scopeLoopIterations++;
+                  // scopeLoopIterations++;
                   if ((regExp1.test(tokenString) || regExp2.test(tokenString) || /\{/.test(tokenString)) && (token.scopes[i].includes('comment') || token.scopes[i].includes('string'))) {
                     inCommentOrString = 1;
                     break;
@@ -320,7 +321,7 @@ export function showStartOfBlockRuby() {
                   }
                 }
 
-                console.timeEnd('begin tokenScope for loop')
+                // console.timeEnd('begin tokenScope for loop')
 
                 // If we have found a match, the token is a keyword, and it's not part of a comment or string,
                 // break out of the for loop iterating over the line tokens
@@ -339,7 +340,7 @@ export function showStartOfBlockRuby() {
                 isAKeyword = -1;
               }
 
-              console.timeEnd('begin lineTokens for loop')
+              // console.timeEnd('begin lineTokens for loop')
 
               if (inCommentOrString == 0 && isAKeyword == 0) {
                 if (regExp2.test(matchedKeyword) || /\{/.test(matchedKeyword)) {
@@ -381,14 +382,14 @@ export function showStartOfBlockRuby() {
                 continue;
               }
 
-              console.log(lineTokenLoopIterations)
-              console.log(scopeLoopIterations)
+              // console.log(lineTokenLoopIterations)
+              // console.log(scopeLoopIterations)
               console.timeEnd('Total Runtime')
               addDecorations(editor, lineText, lineNumber)
               break;
             }
 
-            console.timeEnd('Whole Line Runtime')
+            // console.timeEnd('Whole Line Runtime')
           }
 
         } else {
