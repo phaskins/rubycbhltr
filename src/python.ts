@@ -49,6 +49,8 @@ export function showStartOfBlockPython() {
           const regExp1 = new RegExp(/\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
           const regExp2 = new RegExp(/^\s*\b(class|def|elif|else|except|finally|for|if|try|while)\b/);
 
+          // console.time('Whole Line Runtime')
+
           // Find the number of spaces before the previous indent/parent scope
           for (lineNumber = editor.selection.start.line; lineNumber >= 0; lineNumber--) {
             lineText = editor.document.lineAt(lineNumber).text;
@@ -137,6 +139,7 @@ export function showStartOfBlockPython() {
                       if (startScopeInCommentOrString == 0 && isAKeyword == 0) {
                         if (regExp2.test(lineText)) {
                           addDecorations(editor, lineText, lineNumber);
+                          // console.timeEnd('Whole Line Runtime')
                           return;
                         }
                       } else {
@@ -175,6 +178,7 @@ export function showStartOfBlockPython() {
 
                       if (inCommentOrString == 0 && isAKeyword == 0) {
                         addDecorations(editor, lineText, lineNumber);
+                        // console.timeEnd('Whole Line Runtime')
                         return;
 
                       } else {
@@ -198,6 +202,7 @@ export function showStartOfBlockPython() {
 
                       if (inCommentOrString == 0 && isAKeyword == 0) {
                         addDecorations(editor, lineText, lineNumber);
+                        // console.timeEnd('Whole Line Runtime')
                         return;
 
                       } else {
@@ -221,6 +226,7 @@ export function showStartOfBlockPython() {
 
                       if (inCommentOrString == 0 && isAKeyword == 0) {
                         addDecorations(editor, lineText, lineNumber);
+                        // console.timeEnd('Whole Line Runtime')
                         return;
 
                       } else {
@@ -244,6 +250,7 @@ export function showStartOfBlockPython() {
 
                       if (inCommentOrString == 0 && isAKeyword == 0) {
                         addDecorations(editor, lineText, lineNumber);
+                        // console.timeEnd('Whole Line Runtime')
                         return;
 
                       } else {
@@ -270,6 +277,7 @@ export function showStartOfBlockPython() {
 
                       if (inCommentOrString == 0 && isAKeyword == 0) {
                         addDecorations(editor, lineText, lineNumber);
+                        // console.timeEnd('Whole Line Runtime')
                         return;
 
                       } else {

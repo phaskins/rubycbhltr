@@ -4,6 +4,15 @@ import * as vscode from 'vscode';
 import { IToken } from 'vscode-textmate';
 import { registry, addDecorations, decorationType } from './extension'
 
+// States:
+// 0: Start of line
+// 1: Spaces after start of line
+// 5: Begin, Case, Class, Def, Do, For, Module, { keywords found
+// 6: If, Unless, Until, While keywords found
+// 7: End, } keywords found
+// 8: Non-keyword found
+// 9: Spaces directly after a non-keyword
+
 export function showStartOfBlockRuby() {
   // If the line is already highlighted, do nothing
   if (decorationType) {
@@ -49,6 +58,8 @@ export function showStartOfBlockRuby() {
           let beginMultiLineCommentRegEx = /^=begin/;
           let endMultiLineCommentRegEx = /^=end/;
           let multiLineComment = 0;
+          let firstBlockKeyword = '';
+          let firstBlockKeywordIndex = -1;
 
           // console.time('Whole Line Runtime')
 
@@ -93,7 +104,15 @@ export function showStartOfBlockRuby() {
                 case(tokenString == 'begin'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9 ) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      // Find the string and index of the first block keyword in the first line
+                      // This is important if we decide we want to highlight the parent class of, let's say, an if statement
+                      // instead of having it highlight itself
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -103,7 +122,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'case'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -113,7 +137,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'class'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -123,7 +152,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'def'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -133,7 +167,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'do'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -143,7 +182,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'for'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9 ) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -153,7 +197,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'if'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 6;
@@ -163,7 +212,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'module'):
                   if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 5;
@@ -173,7 +227,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'unless'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 6;
@@ -183,7 +242,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'until'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 6;
@@ -193,7 +257,12 @@ export function showStartOfBlockRuby() {
                 case (tokenString == 'while'):
                   if (prevState == 0 || prevState == 1) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
+                      if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                        firstBlockKeyword = tokenString;
+                        firstBlockKeywordIndex = token.startIndex;
+                      }
                       count++;
                     }
                     prevState = 6;
@@ -205,6 +274,10 @@ export function showStartOfBlockRuby() {
                   let inString = isScopeInScopeArray(token, 'string')
 
                   if (containsScope == 0 && inString == 1) {
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
                     count++;
                   }
                   prevState = 5;
@@ -217,6 +290,7 @@ export function showStartOfBlockRuby() {
                   // the counter again when we already did so from the beginning
                   if (lineNumber == editor.selection.start.line && firstEndCharFound == 0) {
                     firstEndCharFound = 1;
+
                   } else if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
                     if (containsScope == 0) {
@@ -229,6 +303,7 @@ export function showStartOfBlockRuby() {
                 case (tokenString == '}'):
                   if (lineNumber == editor.selection.start.line && firstEndCharFound == 0) {
                     firstEndCharFound = 1;
+
                   } else {
                     containsScope = isScopeInScopeArray(token, 'punctuation.section.scope.end');
                     let inString = isScopeInScopeArray(token, 'string')
@@ -260,6 +335,16 @@ export function showStartOfBlockRuby() {
             }
 
             if (count == 0) {
+              // If target line = start line (i.e. the line to be highlighted is the line the command is initialized on)
+              // If the cursor is behind the keyword: if, while, begin, do, etc. then highlight its parent scope by
+              // decrementing the count. Else if the cursor is after the keyword, go ahead and highlight the current line.
+              // This helps provide a better sense of scope. Any text after keywords such as if, while, begin, do, etc.
+              // is part of that scope. But the block statement itself belongs to its parent scope.
+              if (firstBlockKeywordIndex != -1 && lineNumber == editor.selection.start.line && editor.selection.start.character < (firstBlockKeywordIndex + firstBlockKeyword.length + 1)) {
+                count--;
+                firstBlockKeywordIndex = -1;
+                continue;
+              }
               addDecorations(editor, lineText, lineNumber)
               // console.timeEnd('Whole Line Runtime')
               break;
