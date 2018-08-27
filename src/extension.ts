@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
         decorationType = null;
       }
     }
-  })
+  });
 }
 
 export function addDecorations(editor: vscode.TextEditor, lineText: string, lineNumber: number) {

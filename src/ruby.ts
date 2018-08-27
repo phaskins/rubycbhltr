@@ -2,7 +2,7 @@
 
 import * as vscode from 'vscode';
 import { IToken } from 'vscode-textmate';
-import { registry, addDecorations, decorationType } from './extension'
+import { registry, addDecorations, decorationType } from './extension';
 
 // States:
 // 0: Start of line
@@ -271,7 +271,7 @@ export function showStartOfBlockRuby() {
 
                 case (tokenString == '{'):
                   containsScope = isScopeInScopeArray(token, 'punctuation.section.scope.begin');
-                  let inString = isScopeInScopeArray(token, 'string')
+                  let inString = isScopeInScopeArray(token, 'string');
 
                   if (containsScope == 0 && inString == 1) {
                     if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
@@ -306,7 +306,7 @@ export function showStartOfBlockRuby() {
 
                   } else {
                     containsScope = isScopeInScopeArray(token, 'punctuation.section.scope.end');
-                    let inString = isScopeInScopeArray(token, 'string')
+                    let inString = isScopeInScopeArray(token, 'string');
 
                     if (containsScope == 0 && inString == 1) {
                       count--;
@@ -345,7 +345,7 @@ export function showStartOfBlockRuby() {
                 firstBlockKeywordIndex = -1;
                 continue;
               }
-              addDecorations(editor, lineText, lineNumber)
+              addDecorations(editor, lineText, lineNumber);
               // console.timeEnd('Whole Line Runtime')
               break;
             }
@@ -358,7 +358,7 @@ export function showStartOfBlockRuby() {
       });
 
     } else {
-      vscode.window.showInformationMessage('Nothing is selected');
+      vscode.window.showInformationMessage('Please select text or place the cursor near a word character');
     }
   }
 }

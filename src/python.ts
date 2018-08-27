@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { registry, addDecorations, decorationType } from './extension'
+import { registry, addDecorations, decorationType } from './extension';
 
 export function showStartOfBlockPython() {
   // If the line is already highlighted, do nothing
@@ -299,7 +299,7 @@ export function showStartOfBlockPython() {
       });
 
     } else {
-      vscode.window.showInformationMessage('Nothing is selected');
+      vscode.window.showInformationMessage('Please select text or place the cursor near a word character');
     }
   }
 }
