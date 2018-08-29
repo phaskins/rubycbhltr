@@ -51,4 +51,4 @@ The keybinding for the extension can be changed via the "keybindings" settings
   
 ![](./images/commands_and_keybindings.png)  
 
-<span style="font-size:0.6em;">Honorary Beta Tester: Fenhan Wang</span>
+##### Honorary Beta Tester: Fenhan Wang
