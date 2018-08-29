@@ -55,11 +55,18 @@ export function showStartOfBlockRuby() {
           let lineText: string;
           let firstEndCharFound = 0;
           let spaceRegEx = /^\s+$/;
+
           let beginMultiLineCommentRegEx = /^=begin/;
           let endMultiLineCommentRegEx = /^=end/;
           let multiLineComment = 0;
+
           let firstBlockKeyword = '';
           let firstBlockKeywordIndex = -1;
+
+          let lastSeenBlockKeyword = '';
+          let elseWhenOrRescueKeywordFound = '';
+          let storedLineNumber = -1;
+          let storedLineText = '';
 
           // console.time('Whole Line Runtime')
 
@@ -113,6 +120,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -128,6 +136,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -143,6 +152,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -158,6 +168,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -173,6 +184,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -188,6 +200,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -203,6 +216,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 6;
@@ -218,6 +232,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 5;
@@ -233,6 +248,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 6;
@@ -248,6 +264,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 6;
@@ -263,6 +280,7 @@ export function showStartOfBlockRuby() {
                         firstBlockKeyword = tokenString;
                         firstBlockKeywordIndex = token.startIndex;
                       }
+                      lastSeenBlockKeyword = tokenString;
                       count++;
                     }
                     prevState = 6;
@@ -283,16 +301,77 @@ export function showStartOfBlockRuby() {
                   prevState = 5;
                   break;
 
+                case (tokenString == 'elsif'):
+                  containsScope = isScopeInScopeArray(token, 'keyword');
+
+                  if (containsScope == 0 && count + 1 == 0 && elseWhenOrRescueKeywordFound == '') {
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
+                    elseWhenOrRescueKeywordFound = tokenString;
+                    storedLineNumber = lineNumber;
+                    storedLineText = lineText;
+                  }
+                  break;
+
+                case (tokenString == 'else'):
+                  containsScope = isScopeInScopeArray(token, 'keyword');
+
+                  if (containsScope == 0 && count + 1 == 0 && elseWhenOrRescueKeywordFound == '') {
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
+                    elseWhenOrRescueKeywordFound = tokenString;
+                    storedLineNumber = lineNumber;
+                    storedLineText = lineText;
+                  }
+                  break;
+
+                case (tokenString == 'rescue'):
+                  containsScope = isScopeInScopeArray(token, 'keyword');
+
+                  if (containsScope == 0 && count + 1 == 0 && elseWhenOrRescueKeywordFound == '') {
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
+                    elseWhenOrRescueKeywordFound = tokenString;
+                    storedLineNumber = lineNumber;
+                    storedLineText = lineText;
+                  }
+                  break;
+
+                case (tokenString == 'when'):
+                  containsScope = isScopeInScopeArray(token, 'keyword');
+
+                  if (containsScope == 0 && count + 1 == 0 && elseWhenOrRescueKeywordFound == '') {
+                    if (lineNumber == editor.selection.start.line && firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
+                    elseWhenOrRescueKeywordFound = tokenString;
+                    storedLineNumber = lineNumber;
+                    storedLineText = lineText;
+                  }
+                  break;
+                  
                 case (tokenString == 'end'):
                   // If the function is activated on a line that does not contain "end", then go ahead and decrement the 
                   // counter once the first keyword "end" is found (like normal). The reason for this is that the count
                   // is initialized to -1 on the line we start at. So if the line contains "end", we don't want to decrement 
                   // the counter again when we already did so from the beginning
                   if (lineNumber == editor.selection.start.line && firstEndCharFound == 0) {
+                    if (firstBlockKeywordIndex == -1) {
+                      firstBlockKeyword = tokenString;
+                      firstBlockKeywordIndex = token.startIndex;
+                    }
                     firstEndCharFound = 1;
 
                   } else if (prevState == 0 || prevState == 1 || prevState == 8 || prevState == 9) {
                     containsScope = isScopeInScopeArray(token, 'keyword');
+
                     if (containsScope == 0) {
                       count--;
                     }
@@ -340,12 +419,61 @@ export function showStartOfBlockRuby() {
               // decrementing the count. Else if the cursor is after the keyword, go ahead and highlight the current line.
               // This helps provide a better sense of scope. Any text after keywords such as if, while, begin, do, etc.
               // is part of that scope. But the block statement itself belongs to its parent scope.
-              if (firstBlockKeywordIndex != -1 && lineNumber == editor.selection.start.line && editor.selection.start.character < (firstBlockKeywordIndex + firstBlockKeyword.length + 1)) {
-                count--;
-                firstBlockKeywordIndex = -1;
-                continue;
+              if (firstBlockKeywordIndex != -1 && firstBlockKeyword != 'end' && editor.selection.start.character < (firstBlockKeywordIndex + firstBlockKeyword.length + 1)) {
+                // If the command wasn't initialized with the cursor on an "elsif", "else", "rescue", or "when", go ahead and 
+                // decrement the count to select the parent scope
+                if (lineNumber == editor.selection.start.line) {
+                  count--;
+                  continue;
+
+                // However if the command WAS initialized with the curspr on an "elsif", "else", "rescue", or "when",
+                // just use lineNumber and lineText to highlight the parent block, instead of storedLineNumber 
+                // storedLineText
+                } else if (storedLineNumber == editor.selection.start.line) {
+                  addDecorations(editor, lineText, lineNumber);
+                  break;
+                }
               }
-              addDecorations(editor, lineText, lineNumber);
+
+              // Allow for the ability to highlight "elsif", "else", "rescue", and "when", without disrupting the count.
+              // First, if one of these keywords is found, and doing a "count++" would bring the count to 0, store
+              // the lineNumber and lineText for later use. When the line to be highlighted is found, check the
+              // lastSeenBlockKeyword. If they match up, i.e. "else" found earlier and "if" found as the lastSeenBlockKeyword,
+              // then highlight, i.e., that "else" line (the previously storedLineNumber) instead. If the command is activated
+              // on the word "end", this "end" needs to match with the start block keyword (i.e. an "if") and not an
+              // "elsif" or "else". So check for that and don't do the following.
+              if (elseWhenOrRescueKeywordFound != '' && firstBlockKeyword != 'end' && storedLineNumber != -1 && storedLineText != '') {
+
+                switch (elseWhenOrRescueKeywordFound) {
+                  case 'elsif':
+                    if (lastSeenBlockKeyword == 'if') {
+                      addDecorations(editor, storedLineText, storedLineNumber);
+                    }
+                    break;
+
+                  case 'else':
+                    if (lastSeenBlockKeyword == 'if' || lastSeenBlockKeyword == 'case' || lastSeenBlockKeyword == 'begin') {
+                      addDecorations(editor, storedLineText, storedLineNumber);
+                    }
+                    break;
+
+                  case 'rescue':
+                    if (lastSeenBlockKeyword == 'begin') {
+                      addDecorations(editor, storedLineText, storedLineNumber);
+                    }
+                    break;
+
+                  case 'when':
+                    if (lastSeenBlockKeyword == 'case') {
+                      addDecorations(editor, storedLineText, storedLineNumber);
+                    }
+                    break;
+                }
+              
+              } else {
+                addDecorations(editor, lineText, lineNumber);
+              }
+
               // console.timeEnd('Whole Line Runtime')
               break;
             }

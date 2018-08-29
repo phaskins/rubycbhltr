@@ -112,6 +112,7 @@ export function showStartOfBlockPython() {
                 // If the current line matches one of the keywords we're looking for...
                 if (regExp1.test(lineText)) {
                   let lineTokens = grammar.tokenizeLine(lineText, null);
+
                   // Go through each token in the line to find the keyword
                   for (let i = 0; i < lineTokens.tokens.length; i++) {
                     let startScopeInCommentOrString = -1;

@@ -23,21 +23,21 @@
                 "title": "Show Start Of Block"
             },
             {
-              "command": "extension.showStartOfScope",
-              "title": "Show Start Of Scope"
+                "command": "extension.showStartOfScope",
+                "title": "Show Start Of Scope"
             }
         ],
         "menus": {
-          "commandPalette": [
-            {
-              "command": "extension.showStartOfBlock",
-              "when": "editorLangId == ruby"
-            },
-            {
-              "command": "extension.showStartOfScope",
-              "when": "editorLangId == python"
-            }
-          ]
+            "commandPalette": [
+                {
+                    "command": "extension.showStartOfBlock",
+                    "when": "editorLangId == ruby"
+                },
+                {
+                    "command": "extension.showStartOfScope",
+                    "when": "editorLangId == python"
+                }
+            ]
         },
         "keybindings": [
             {
@@ -46,9 +46,9 @@
                 "when": "editorTextFocus && editorLangId == ruby"
             },
             {
-              "command": "extension.showStartOfScope",
-              "key": "alt+h",
-              "when": "editorTextFocus && editorLangId == python"
+                "command": "extension.showStartOfScope",
+                "key": "alt+h",
+                "when": "editorTextFocus && editorLangId == python"
             }
         ],
         "configuration": {
@@ -69,11 +69,11 @@
     },
     "devDependencies": {
         "@types/mocha": "^2.2.42",
-        "@types/node": "^7.0.43",
-        "electron-rebuild": "^1.8.1",
+        "@types/node": "^7.0.69",
+        "electron-rebuild": "^1.8.2",
         "tslint": "^5.11.0",
         "typescript": "^2.6.1",
-        "vscode": "^1.1.6"
+        "vscode": "^1.1.21"
     },
     "dependencies": {
         "vscode-textmate": "^4.0.1"
