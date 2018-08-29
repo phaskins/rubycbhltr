@@ -19,36 +19,36 @@
     "contributes": {
         "commands": [
             {
-                "command": "extension.showStartOfBlock",
-                "title": "Show Start Of Block"
+              "command": "extension.showStartOfBlock",
+              "title": "Show Start Of Block"
             },
             {
-                "command": "extension.showStartOfScope",
-                "title": "Show Start Of Scope"
+              "command": "extension.showStartOfScope",
+              "title": "Show Start Of Scope"
             }
         ],
         "menus": {
-            "commandPalette": [
-                {
-                    "command": "extension.showStartOfBlock",
-                    "when": "editorLangId == ruby"
-                },
-                {
-                    "command": "extension.showStartOfScope",
-                    "when": "editorLangId == python"
-                }
-            ]
+          "commandPalette": [
+              {
+                  "command": "extension.showStartOfBlock",
+                  "when": "editorLangId == ruby"
+              },
+              {
+                  "command": "extension.showStartOfScope",
+                  "when": "editorLangId == python"
+              }
+          ]
         },
         "keybindings": [
             {
-                "command": "extension.showStartOfBlock",
-                "key": "alt+h",
-                "when": "editorTextFocus && editorLangId == ruby"
+              "command": "extension.showStartOfBlock",
+              "key": "alt+h",
+              "when": "editorTextFocus && editorLangId == ruby"
             },
             {
-                "command": "extension.showStartOfScope",
-                "key": "alt+h",
-                "when": "editorTextFocus && editorLangId == python"
+              "command": "extension.showStartOfScope",
+              "key": "alt+h",
+              "when": "editorTextFocus && editorLangId == python"
             }
         ],
         "configuration": {
