@@ -51,5 +51,5 @@ The keybinding for the extension can be changed via the "keybindings" settings
   
 ![](./images/commands_and_keybindings.png)  
 
-
+<br/><br/>
 <sub>Honorary Beta Tester: Fenhan Wang</sub>
