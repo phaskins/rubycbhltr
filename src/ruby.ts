@@ -90,7 +90,7 @@ export function showStartOfBlockRuby() {
             for (let i = 0; i < lineTokens.tokens.length; i++) {
               let containsScope = -1;
               let token = lineTokens.tokens[i];
-              let tokenString = (lineText.substring(token.startIndex, token.endIndex));
+              let tokenString = lineText.substring(token.startIndex, token.endIndex);
               // console.log(tokenString)
 
               switch (true) {
@@ -434,7 +434,6 @@ export function showStartOfBlockRuby() {
                   break;
                 }
               }
-
               // Allow for the ability to highlight "elsif", "else", "rescue", and "when", without disrupting the count.
               // First, if one of these keywords is found, and doing a "count++" would bring the count to 0, store
               // the lineNumber and lineText for later use. When the line to be highlighted is found, check the
